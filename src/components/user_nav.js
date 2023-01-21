@@ -3,11 +3,8 @@ import "./button";
 import bg_mobile from "../assets/images/mobile/mobile_user.png";
 import bg_desktop from "../assets/images/desktop/desktop_user.png";
 import icon from "../assets/icon/film_icon.png";
-class C_Nav extends LitElement {
-  nav_styles = {
-    backgroundImage: `${bg_mobile}`,
-  };
 
+class C_Nav extends LitElement {
   static get styles() {
     return [
       css`
@@ -63,9 +60,12 @@ class C_Nav extends LitElement {
   }
 
   firstUpdated() {
-    console.log(bg_mobile);
     const $nav_container = this.shadowRoot.querySelector(".nav-container");
     $nav_container.style.backgroundImage = `url(${this.nav_styles.backgroundImage})`;
+    const $button = this.shadowRoot.querySelector('[title="WATCHED"]');
+    $button.addEventListener("click", () => {
+      console.log("boton presionado");
+    });
   }
 
   render() {
