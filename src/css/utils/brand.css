@@ -12,6 +12,7 @@
 *{
 box-sizing: border-box;
 margin: 0 auto;
+padding: 0;
 }
 
 
@@ -24,5 +25,4 @@ body{
     flex-direction: column;
     justify-content: center;
     
-
 }

@@ -77,6 +77,9 @@ class C_Header extends LitElement {
           justify-content: center;
           gap: 19.62px;
         }
+        a {
+          all: unset;
+        }
       `,
     ];
   }
@@ -120,8 +123,8 @@ class C_Header extends LitElement {
                   <h1>Filmoteka</h1>
                 </div>
               </li>
-              <li><a>HOME</a></li>
-              <li><a>MY LIBRARY</a></li>
+              <li><a href="index.html">HOME</a></li>
+              <li><a href="user.html">MY LIBRARY</a></li>
             </ul>
           </div>
 

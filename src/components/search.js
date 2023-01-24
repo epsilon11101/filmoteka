@@ -12,8 +12,16 @@ class C_Search extends LitElement {
           justify-content: center;
           align-items: center;
         }
+        div {
+          width: 50%;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          padding: 10px;
+        }
         input {
-          min-width: var(--input-width, 50%);
+          flex: 1;
+          height: 40px;
           color: var(--white_primary);
           font-weight: var(--bold);
           font-size: 14px;
@@ -23,6 +31,10 @@ class C_Search extends LitElement {
           border-left: none;
           border-right: none;
           border-bottom: 1px solid var(--white_primary);
+        }
+        ::slotted(i) {
+          font-size: 20px;
+          color: var(--white_primary);
         }
 
         /* @media (max-width: 768px) {
@@ -52,7 +64,11 @@ class C_Search extends LitElement {
 
   render() {
     return html`
-    <input type="search"></input>
+    <div>
+      <input type="search"></input>
+        <slot name="icon"></slot>
+    </div>
+    
     `;
   }
 }
