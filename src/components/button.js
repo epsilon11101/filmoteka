@@ -16,7 +16,7 @@ class C_Button extends LitElement {
           border: solid 1px white;
         }
         button:hover {
-          background-color: var(--h_btn-color, #ff6b08);
+          background-color: var(--h_btn-color, var(--orange_primary));
           cursor: pointer;
         }
       `,
