@@ -63,7 +63,7 @@ class C_Nav extends LitElement {
   }
 
   firstUpdated() {
-    console.log(bg_mobile);
+    //console.log(bg_mobile);
     const $nav_container = this.shadowRoot.querySelector(".nav-container");
     $nav_container.style.backgroundImage = `url(${this.nav_styles.backgroundImage})`;
   }
