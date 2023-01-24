@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import getMovies from "../scripts/api_request";
 
 class MovieCard extends LitElement {
   static get styles() {
@@ -11,7 +12,7 @@ class MovieCard extends LitElement {
           font-size: 12px;
           color: #ff6b08;
           width: 280px;
-          padding: 20px;
+          padding: 20px 20px 0px;
         }
         .movieCard__image {
           width: 100%;
@@ -38,51 +39,35 @@ class MovieCard extends LitElement {
   }
 
   firstUpdated() {
-    //example es un ejemplo recibiendo un array de objetos con los datos
-    const example = [
-      {
-        image:
-          "https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg",
-        genres: [
-          {
-            id: 18,
-            name: "Drama",
-          },
-        ],
-        title: "A title",
-        year: "1999",
-        vote_average: 7.8,
-      },
-    ];
+    getMovies().then(this.printMovies.bind(this));
+  }
 
-    const $movie_image = this.shadowRoot.querySelector(".movieCard__image");
-    const $movie_title = this.shadowRoot.querySelector(".movieCard__title");
-    const $movie_gender = this.shadowRoot.querySelector(".movieCard__gender");
-    const $movie_year = this.shadowRoot.querySelector(".movieCard__year");
-    const $movie_vote = this.shadowRoot.querySelector(".movieCard__vote");
+  printMovies(movies) {
+    const $card = this.shadowRoot.querySelector(".card");
 
-    //agrega la información proveniente del array de objetos
-    $movie_image.src = example[0].image;
-    $movie_image.alt = example[0].title;
-    $movie_title.textContent = example[0].title;
+    const insertMovie = movies
+      .map(
+        (movie) =>
+          /* const genres = movie.genres.map((genre) => " " + genre.name);
+      $movie_gender.textContent = genres;*/
+          `<div class="movieCard"><img class="movieCard__image" height="398" src="https://image.tmdb.org/t/p/w500${
+            movie.poster_path
+          }" alt=${movie.title}/>
+          <div class="movieCard__title">${movie.title}</div>
+          <span class="movieCard__gender"></span>
+          <span class="movieCard__year"> | ${
+            movie.release_date.split("-")[0]
+          } </span>
+          <span class="movieCard__vote"> ${movie.vote_average}</span>
+          </div>`
+      )
+      .join("");
 
-    const genres = example[0].genres.map((genre) => " " + genre.name);
-    $movie_gender.textContent = genres;
-
-    $movie_year.textContent = "| " + example[0].year;
-    $movie_vote.textContent = example[0].vote_average;
+    $card.insertAdjacentHTML("afterbegin", insertMovie);
   }
 
   render() {
-    return html`
-      <div class="movieCard">
-        <img class="movieCard__image" height="398" src="" alt="" />
-        <div class="movieCard__title"></div>
-        <span class="movieCard__gender"></span>
-        <span class="movieCard__year"></span>
-        <span class="movieCard__vote"></span>
-      </div>
-    `;
+    return html` <div class="card"></div> `;
   }
 }
 
