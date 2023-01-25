@@ -1,22 +1,52 @@
 import axios from "axios";
 
-const KEY = "d9b50eb87c44c0faed349508e17a23e7";
-//const URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${KEY}`;
-const URL = `https://api.themoviedb.org/3/discover/movie?api_key=${KEY}&language=es&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate`;
-let page = 1;
-let resp;
-const getMovies = async () => {
+const config = {
+  api_key: "d9b50eb87c44c0faed349508e17a23e7",
+  api_base_url: "https://api.themoviedb.org/3/",
+  image_base_url: "https://image.tmdb.org/t/p/w500",
+  movie_id: "315162",
+};
+
+const getGeneralMovies = async () => {
   try {
-    const respuesta = await axios.get(`${URL}`);
-    // statusValue(respuesta);
-    resp = await respuesta.data.results;
-  
-    return resp;
+    const response = await axios.get(
+      `${config.api_base_url}discover/movie?api_key=${config.api_key}&language=es`
+    );
+    const data = await response.data;
+    return data.results;
   } catch (error) {
-    alert(error.response.data.status_message);
+    alert("Sorry,error");
   }
 };
 
-getMovies();
-//console.log(data);
-export default getMovies
+const getGeneresMovies = async () => {
+  try {
+    const response = await axios.get(
+      `${config.api_base_url}genre/movie/list?api_key=${config.api_key}&language=es`
+    );
+    const data = await response.data;
+    //console.log(data.genres);
+    return data;
+  } catch (error) {
+    alert("Sorry,error");
+  }
+};
+
+const getMovie = async () => {
+  try {
+    const response = await axios.get(
+      `${config.api_base_url}movie/${config.movie_id}?api_key=${config.api_key}&language=es`
+    );
+    const data = await response.data;
+    console.log(data);
+    return data
+  } catch (error) {
+    alert("Sorry, error");
+  }
+};
+
+
+
+export{getGeneralMovies,getGeneresMovies,getMovie}
+
+
