@@ -1,6 +1,6 @@
-import "../components/user_nav";
-import "../sass/utils/brand.scss";
-import "../components/movie_card";
+import "../css/utils/brand.css";
+import "../components/header";
+import "../components/modal";
 import MovieApi from "./movie_api";
 
 const API = new MovieApi();

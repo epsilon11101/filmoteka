@@ -9,14 +9,15 @@ class C_Button extends LitElement {
         }
         button {
           background-color: var(--btn-color, transparent);
-          min-width: var(--btn-width, 130.19px);
+          width: var(--btn-width, 130.19px);
           min-height: var(--btn-height, 44px);
           border-radius: 5px;
-          color: white;
-          border: solid 1px white;
+          color: var(--btn-text_color, var(--white_primary));
+          border: solid 1px var(--btn-border_color, var(--white_primary));
         }
         button:hover {
-          background-color: var(--h_btn-color, #ff6b08);
+          color: var(--h_btn-text_color, var(--white_primary));
+          background-color: var(--h_btn-color, var(--orange_primary));
           cursor: pointer;
         }
       `,
