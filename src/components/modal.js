@@ -10,6 +10,8 @@ class C_Modal extends LitElement {
           display: block;
           color: black;
           text-align: left;
+          width: 280px;
+          height: 100vh;
         }
         .modal_container {
           background-color: var(--white_primary);
@@ -26,6 +28,11 @@ class C_Modal extends LitElement {
           display: flex;
           justify-content: center;
           align-items: center;
+        }
+        .image-container img {
+          width: 240px;
+          height: 357px;
+          object-fit: cover;
         }
         .modal_header {
           width: 100%;
@@ -80,6 +87,19 @@ class C_Modal extends LitElement {
           padding: 0 5px;
         }
 
+        span.btn-close {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          position: absolute;
+          top: 1%;
+          left: 85%;
+          min-width: 25px;
+          height: 20px;
+          font-size: 10px;
+        }
+
         p,
         h6,
         .movie_prop {
@@ -101,6 +121,41 @@ class C_Modal extends LitElement {
         }
         p {
           line-height: 20px;
+        }
+        @media screen and (min-width: 767px) {
+          :host {
+            width: 618px;
+            height: 231px;
+          }
+          .modal_container {
+            flex-direction: row;
+            gap: 32px;
+            justify-content: center;
+            align-items: center;
+          }
+          span.btn-close {
+            left: 93%;
+            min-width: 30px;
+            height: 25px;
+            font-size: 15px;
+          }
+          .image-container img {
+            width: 264px;
+            height: 374px;
+          }
+        }
+        @media screen and (min-width: 1024px) {
+          :host {
+            width: 882px;
+            height: 568px;
+          }
+          .image-container img {
+            width: 396px;
+            height: 478px;
+          }
+          span.btn-close {
+            left: 95%;
+          }
         }
       `,
     ];
@@ -131,35 +186,38 @@ class C_Modal extends LitElement {
   render() {
     return html`
       <div class="modal_container">
+        <span class="btn-close">X</span>
         <div class="image-container">
           <img src=${this.movie_prop.img_url} />
         </div>
-        <div class="modal_header">
-          <h3 class="title">A FIRST OF LEAD</h3>
-          <div class="table">
-            <div class="col">
-              <div class="row movie_prop">Vote/Votes</div>
-              <div class="row movie_prop">Popularity</div>
-              <div class="row movie_prop">Original Title</div>
-              <div class="row movie_prop">Genre</div>
-            </div>
-            <div class="col">
-              <div class="row movie_data">
-                <span>${this.movie_prop.vote}</span>/${this.movie_prop.votes}
+        <div>
+          <div class="modal_header">
+            <h3 class="title">A FIRST OF LEAD</h3>
+            <div class="table">
+              <div class="col">
+                <div class="row movie_prop">Vote/Votes</div>
+                <div class="row movie_prop">Popularity</div>
+                <div class="row movie_prop">Original Title</div>
+                <div class="row movie_prop">Genre</div>
               </div>
-              <div class="row movie_data">${this.movie_prop.popularity}</div>
-              <div class="row movie_data">${this.movie_prop.title}</div>
-              <div class="row movie_data">${this.movie_prop.genre}</div>
+              <div class="col">
+                <div class="row movie_data">
+                  <span>${this.movie_prop.vote}</span>/${this.movie_prop.votes}
+                </div>
+                <div class="row movie_data">${this.movie_prop.popularity}</div>
+                <div class="row movie_data">${this.movie_prop.title}</div>
+                <div class="row movie_data">${this.movie_prop.genre}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="modal_body">
-          <h6>ABOUT</h6>
-          <p>${this.movie_prop.about}</p>
-        </div>
-        <div class="modal_footer">
-          <c-button title="ADD TO WATCHED"></c-button>
-          <c-button title="ADD TO QUEUE"></c-button>
+          <div class="modal_body">
+            <h6>ABOUT</h6>
+            <p>${this.movie_prop.about}</p>
+          </div>
+          <div class="modal_footer">
+            <c-button title="ADD TO WATCHED"></c-button>
+            <c-button title="ADD TO QUEUE"></c-button>
+          </div>
         </div>
       </div>
     `;
