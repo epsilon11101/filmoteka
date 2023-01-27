@@ -34,6 +34,7 @@ class C_Search extends LitElement {
         ::slotted(i) {
           font-size: 20px;
           color: var(--white_primary);
+          cursor: pointer;
         }
 
         @media (min-width: 767px) {
