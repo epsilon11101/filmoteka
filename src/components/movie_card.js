@@ -54,6 +54,7 @@ class MovieCard extends LitElement {
   }
 
   createMovieCard(movies, genres) {
+    console.table(genres);
     const cards = movies.results
       .map((movie) => {
         const {
@@ -65,13 +66,14 @@ class MovieCard extends LitElement {
           id,
         } = movie;
         const mov_gen = [...genre_ids.map((gen) => genres.get(gen))];
+        if (mov_gen.length > 2) mov_gen[2] = "Other";
 
         return ` <div class="movieCard">
           <img class="movieCard__image" height="398" src="https://image.tmdb.org/t/p/w500${url}" alt=${
           movie.title
         } id=${id}/>
             <div class="movieCard__title">${title}</div>
-            <span class="movieCard__gender">${mov_gen.slice(0, 2)}</span>
+            <span class="movieCard__gender">${mov_gen.slice(0, 3)}</span>
             <span class="movieCard__year"> | ${date.split("-")[0]} </span>
             <span class="movieCard__vote"> ${vote}</span>
           </div>`;
