@@ -20,6 +20,16 @@ class C_Button extends LitElement {
           background-color: var(--h_btn-color, var(--orange_primary));
           cursor: pointer;
         }
+        @media screen and (min-width: 767px) {
+          button {
+            --btn-width: 136px;
+          }
+        }
+        @media screen and (min-width: 1024px) {
+          button {
+            --btn-width: 136px;
+          }
+        }
       `,
     ];
   }
