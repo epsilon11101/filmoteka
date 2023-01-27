@@ -11,11 +11,7 @@ class C_Nav extends LitElement {
           display: block;
           width: 100%;
         }
-        header {
-          max-width: 100%;
-          min-height: 230px;
-          background-size: cover;
-        }
+
         .nav-container {
           width: 100%;
           min-height: 100%;
