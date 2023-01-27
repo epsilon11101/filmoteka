@@ -1,7 +1,7 @@
 import "../css/utils/brand.css";
 import "../components/header";
-// import "../components/modal";
-// import MovieApi from "./movie_api";
+import "../components/modal";
+import MovieApi from "./movie_api";
 
 // const API = new MovieApi();
 
