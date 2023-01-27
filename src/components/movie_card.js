@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit";
-import getMovies from "../scripts/api_request";
+import MovieApi from "../scripts/movie_api";
 
 class MovieCard extends LitElement {
   static get styles() {
@@ -10,7 +10,7 @@ class MovieCard extends LitElement {
         }
         .movieCard {
           font-size: 12px;
-          color: #ff6b08;
+          color: var(--orange_primary);
           width: 280px;
           padding: 20px 20px 0px;
         }
@@ -21,13 +21,13 @@ class MovieCard extends LitElement {
           border-radius: 5px;
         }
         .movieCard__title {
-          color: #000000;
+          color: var(--black_primary);
           line-height: 16px;
           text-transform: uppercase;
         }
         .movieCard__vote {
-          color: #ffffff;
-          background-color: #ff6b08;
+          color: var(--white_primary);
+          background-color: var(--orange_primary);
           align-items: center;
           text-align: center;
           border-radius: 5px;
@@ -38,32 +38,54 @@ class MovieCard extends LitElement {
     ];
   }
 
-  firstUpdated() {
-    getMovies().then(this.printMovies.bind(this));
+  static get properties() {
+    return {
+      API: { type: Object },
+    };
   }
 
-  printMovies(movies) {
-    const $card = this.shadowRoot.querySelector(".card");
+  constructor() {
+    super();
+    this.API = new MovieApi();
+  }
 
-    const insertMovie = movies
-      .map(
-        (movie) =>
-          /* const genres = movie.genres.map((genre) => " " + genre.name);
-      $movie_gender.textContent = genres;*/
-          `<div class="movieCard"><img class="movieCard__image" height="398" src="https://image.tmdb.org/t/p/w500${
-            movie.poster_path
-          }" alt=${movie.title}/>
-          <div class="movieCard__title">${movie.title}</div>
-          <span class="movieCard__gender"></span>
-          <span class="movieCard__year"> | ${
-            movie.release_date.split("-")[0]
-          } </span>
-          <span class="movieCard__vote"> ${movie.vote_average}</span>
-          </div>`
-      )
+  firstUpdated() {
+    this.API.get_Genre().then(this.generateMovies.bind(this));
+  }
+
+  createMovieCard(movies, genres) {
+    const cards = movies.results
+      .map((movie) => {
+        const {
+          title,
+          genre_ids,
+          poster_path: url,
+          release_date: date,
+          vote_average: vote,
+          id,
+        } = movie;
+        const mov_gen = [...genre_ids.map((gen) => genres.get(gen))];
+
+        return ` <div class="movieCard">
+          <img class="movieCard__image" height="398" src="https://image.tmdb.org/t/p/w500${url}" alt=${
+          movie.title
+        } id=${id}/>
+            <div class="movieCard__title">${title}</div>
+            <span class="movieCard__gender">${mov_gen.slice(0, 2)}</span>
+            <span class="movieCard__year"> | ${date.split("-")[0]} </span>
+            <span class="movieCard__vote"> ${vote}</span>
+          </div>`;
+      })
       .join("");
+    return cards;
+  }
 
-    $card.insertAdjacentHTML("afterbegin", insertMovie);
+  generateMovies(genres) {
+    this.API.query_params = "trending/movie/week";
+    this.API.getAllData().then((movies) => {
+      const $card = this.shadowRoot.querySelector(".card");
+      $card.innerHTML = this.createMovieCard(movies, genres);
+    });
   }
 
   render() {
