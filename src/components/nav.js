@@ -47,6 +47,12 @@ class C_Nav extends LitElement {
         .nav-menu .logo h1 {
           display: none;
         }
+        .nav-menu .menu {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 39px;
+        }
         .nav-menu li a {
           font-size: 12px;
           position: relative;
@@ -75,6 +81,14 @@ class C_Nav extends LitElement {
         }
         a {
           all: unset;
+        }
+
+        @media screen and (min-width: 767px) {
+          .nav-menu .logo h1 {
+            display: block;
+          }
+        }
+        @media screen and (min-width: 1024px) {
         }
       `,
     ];
@@ -111,11 +125,14 @@ class C_Nav extends LitElement {
                 <h1>Filmoteka</h1>
               </div>
             </li>
-            <li><a href="index.html">HOME</a></li>
-            <li><a href="user.html">MY LIBRARY</a></li>
+            <li>
+              <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="user.html">MY LIBRARY</a>
+              </div>
+            </li>
           </ul>
         </div>
-
         <slot name="search"></slot>
         <div class="nav-btn-container" @click="${this._btnHandler}">
           <slot name="button"></slot>
