@@ -26,9 +26,6 @@ class C_Button extends LitElement {
           }
         }
         @media screen and (min-width: 1024px) {
-          button {
-            --btn-width: 136px;
-          }
         }
       `,
     ];
