@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import { classMap } from "lit/directives/class-map.js";
 import "./button";
 import "../assets/remove.png";
 
@@ -6,28 +7,50 @@ class C_Modal extends LitElement {
   static get styles() {
     return [
       css`
-        :host {
+        /* :host {
           display: block;
           color: black;
           text-align: left;
-          width: 280px;
+        } */
+        .wrapper {
+          color: var(--black_primary);
+          top: 0;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100vw;
           height: 100vh;
+          opacity: 0;
+          backdrop-filter: blur(10px);
+          position: absolute;
+          z-index: 10;
+          transition: opacity 0.25s ease-in;
+        }
+        .wrapper:not(.open) {
+          visibility: hidden;
+        }
+        .wrapper.open {
+          opacity: 1;
+          visibility: visible;
         }
         .modal_container {
+          position: relative;
           background-color: var(--white_primary);
           margin-top: 48px;
-          max-width: 100%;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: flex-start;
           padding-left: 10px;
+          top: 10%;
         }
         .image-container {
           width: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
+          margin-top: 50px;
         }
         .image-container img {
           width: 240px;
@@ -83,17 +106,19 @@ class C_Modal extends LitElement {
           border-radius: 5px;
           padding: 0 5px;
         }
+
         span.btn-close {
+          position: absolute;
           display: flex;
           justify-content: center;
           align-items: center;
           cursor: pointer;
-          position: absolute;
-          top: 1%;
-          left: 85%;
+          margin-right: 15px;
           min-width: 25px;
           height: 20px;
           font-size: 10px;
+          top: 1%;
+          left: 85%;
         }
         p,
         h6,
@@ -127,12 +152,14 @@ class C_Modal extends LitElement {
             gap: 32px;
             justify-content: center;
             align-items: center;
+            top: 1%;
           }
           span.btn-close {
-            left: 93%;
             min-width: 30px;
             height: 25px;
             font-size: 15px;
+            top: 2%;
+            left: 95%;
           }
           .image-container img {
             width: 264px;
@@ -148,9 +175,6 @@ class C_Modal extends LitElement {
             width: 396px;
             height: 478px;
           }
-          span.btn-close {
-            left: 95%;
-          }
         }
       `,
     ];
@@ -159,6 +183,7 @@ class C_Modal extends LitElement {
   static get properties() {
     return {
       movie_prop: { type: Object },
+      open: { type: Boolean },
     };
   }
 
@@ -174,48 +199,63 @@ class C_Modal extends LitElement {
       about:
         "Four of the West’s most infamous outlaws assemble to steal a huge stash of gold from the most corrupt settlement of the gold rush towns. But not all goes to plan one is killed and the other three escapes with bags of gold hide out in the abandoned gold mine where they happen across another gang of three – who themselves were planning to hit the very same bank! As tensions rise, things go from bad to worse as they realise the bags of gold are filled with lead... they’ve been double crossed – but by who and how? ",
     };
+    this.open = false;
   }
 
   firstUpdated() {}
 
   render() {
     return html`
-      <div class="modal_container">
-        <span class="btn-close">X</span>
-        <div class="image-container">
-          <img src=${this.movie_prop.img_url} />
-        </div>
-        <div>
-          <div class="modal_header">
-            <h3 class="title">A FIRST OF LEAD</h3>
-            <div class="table">
-              <div class="col">
-                <div class="row movie_prop">Vote/Votes</div>
-                <div class="row movie_prop">Popularity</div>
-                <div class="row movie_prop">Original Title</div>
-                <div class="row movie_prop">Genre</div>
-              </div>
-              <div class="col">
-                <div class="row movie_data">
-                  <span>${this.movie_prop.vote}</span>/${this.movie_prop.votes}
+      <div
+        class=" ${classMap({
+          wrapper: true,
+          open: this.open,
+        })}"
+      >
+        <div class="modal_container ">
+          <span class="btn-close" @click="${this._closeHandler}">X</span>
+          <div class="image-container">
+            <img src=${this.movie_prop.img_url} />
+          </div>
+          <div>
+            <div class="modal_header">
+              <h3 class="title">A FIRST OF LEAD</h3>
+              <div class="table">
+                <div class="col">
+                  <div class="row movie_prop">Vote/Votes</div>
+                  <div class="row movie_prop">Popularity</div>
+                  <div class="row movie_prop">Original Title</div>
+                  <div class="row movie_prop">Genre</div>
                 </div>
-                <div class="row movie_data">${this.movie_prop.popularity}</div>
-                <div class="row movie_data">${this.movie_prop.title}</div>
-                <div class="row movie_data">${this.movie_prop.genre}</div>
+                <div class="col">
+                  <div class="row movie_data">
+                    <span>${this.movie_prop.vote}</span>/${this.movie_prop
+                      .votes}
+                  </div>
+                  <div class="row movie_data">
+                    ${this.movie_prop.popularity}
+                  </div>
+                  <div class="row movie_data">${this.movie_prop.title}</div>
+                  <div class="row movie_data">${this.movie_prop.genre}</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="modal_body">
-            <h6>ABOUT</h6>
-            <p>${this.movie_prop.about}</p>
-          </div>
-          <div class="modal_footer">
-            <c-button title="ADD TO WATCHED"></c-button>
-            <c-button title="ADD TO QUEUE"></c-button>
+            <div class="modal_body">
+              <h6>ABOUT</h6>
+              <p>${this.movie_prop.about}</p>
+            </div>
+            <div class="modal_footer">
+              <c-button title="ADD TO WATCHED"></c-button>
+              <c-button title="ADD TO QUEUE"></c-button>
+            </div>
           </div>
         </div>
       </div>
     `;
+  }
+
+  _closeHandler() {
+    this.open = false;
   }
 }
 
