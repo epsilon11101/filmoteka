@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import "./modal";
 import MovieApi from "../scripts/movie_api";
 
 class MovieCard extends LitElement {
@@ -54,7 +55,6 @@ class MovieCard extends LitElement {
   }
 
   createMovieCard(movies, genres) {
-    console.table(genres);
     const cards = movies.results
       .map((movie) => {
         const {
@@ -90,8 +90,17 @@ class MovieCard extends LitElement {
     });
   }
 
+  _cardHandler(e) {
+    const card_target = e.target.id;
+    const $modal = this.shadowRoot.querySelector("c-modal");
+    $modal.open = true;
+  }
+
   render() {
-    return html` <div class="card"></div> `;
+    return html`
+      <c-modal></c-modal>
+      <div class="card" @click="${this._cardHandler}"></div>
+    `;
   }
 }
 
