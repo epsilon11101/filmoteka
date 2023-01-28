@@ -34,6 +34,26 @@ class MovieCard extends LitElement {
           padding: 1px 6px;
           margin-left: 10px;
         }
+        @media screen and (min-width: 767px) {
+          .movieCard {
+            
+            width: 294px;
+            padding: 30px 30px 0px;
+          }
+          .card {
+            display: flex;
+            flex-wrap: wrap;
+            width: 768px;
+          }
+          @media screen and (min-width: 1024px) {
+            .card {
+              width: 100%;
+            }
+            .movieCard {
+              width: 274px;
+              padding: 30px 30px 0px;
+            }
+          }
       `,
     ];
   }
@@ -66,7 +86,7 @@ class MovieCard extends LitElement {
           id,
         } = movie;
         const mov_gen = [...genre_ids.map((gen) => genres.get(gen))];
-        if (mov_gen.length > 2) mov_gen[2] = "Other";
+        if (mov_gen.length > 2) mov_gen[2] = " Other";
 
         return ` <div class="movieCard">
           <img class="movieCard__image" height="398" src="https://image.tmdb.org/t/p/w500${url}" alt=${
@@ -75,7 +95,7 @@ class MovieCard extends LitElement {
             <div class="movieCard__title">${title}</div>
             <span class="movieCard__gender">${mov_gen.slice(0, 3)}</span>
             <span class="movieCard__year"> | ${date.split("-")[0]} </span>
-            <span class="movieCard__vote"> ${vote}</span>
+            <span class="movieCard__vote"> ${vote.toFixed(2)}</span>
           </div>`;
       })
       .join("");
