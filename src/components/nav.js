@@ -11,7 +11,6 @@ class C_Nav extends LitElement {
           display: block;
           width: 100%;
         }
-
         .nav-container {
           width: 100%;
           min-height: 100%;
@@ -24,7 +23,6 @@ class C_Nav extends LitElement {
         .nav-menu-container {
           width: 100%;
         }
-
         .nav-menu {
           display: flex;
           align-items: center;
@@ -68,7 +66,6 @@ class C_Nav extends LitElement {
         .nav-menu a:hover::after {
           width: 100%;
         }
-
         .nav-btn-container {
           display: flex;
           justify-content: center;
@@ -78,7 +75,6 @@ class C_Nav extends LitElement {
         a {
           all: unset;
         }
-
         @media screen and (min-width: 767px) {
           .nav-menu .logo h1 {
             display: block;

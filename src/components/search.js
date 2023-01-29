@@ -36,13 +36,11 @@ class C_Search extends LitElement {
           color: var(--white_primary);
           cursor: pointer;
         }
-
         @media (min-width: 767px) {
           div {
             width: 50%;
           }
         }
-
         @media (min-width: 1024px) {
           div {
             width: 33%;
