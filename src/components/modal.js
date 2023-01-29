@@ -18,7 +18,7 @@ class C_Modal extends LitElement {
           height: 100vh;
           opacity: 0;
           backdrop-filter: blur(10px);
-          position: absolute;
+          position: fixed;
           z-index: 10;
           transition: opacity 0.25s ease-in;
         }
@@ -38,7 +38,7 @@ class C_Modal extends LitElement {
           justify-content: center;
           align-items: flex-start;
           padding-left: 10px;
-          top: 1%;
+          top: 0;
         }
         .image-container {
           width: 100%;
@@ -143,9 +143,7 @@ class C_Modal extends LitElement {
             width: 618px;
             height: 231px;
           }
-          .wrapper {
-            position: fixed;
-          }
+
           .modal_container {
             flex-direction: row;
             gap: 32px;
