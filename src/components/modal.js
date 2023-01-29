@@ -7,13 +7,6 @@ class C_Modal extends LitElement {
   static get styles() {
     return [
       css`
-        /* :host {
-          display: block;
-          color: black;
-          text-align: left;
-        } */
-        /* TODO: cambiar position absoluta en cel y las demas en fixed */
-        /* arreglar height de modal de escritorio */
         .wrapper {
           color: var(--black_primary);
           top: 0;
@@ -25,7 +18,7 @@ class C_Modal extends LitElement {
           height: 100vh;
           opacity: 0;
           backdrop-filter: blur(10px);
-          position: fixed;
+          position: absolute;
           z-index: 10;
           transition: opacity 0.25s ease-in;
         }
@@ -136,6 +129,7 @@ class C_Modal extends LitElement {
         .title {
           font-size: 20px;
           line-height: 23.44px;
+          text-transform: uppercase;
         }
         h6,
         p {
@@ -148,6 +142,9 @@ class C_Modal extends LitElement {
           :host {
             width: 618px;
             height: 231px;
+          }
+          .wrapper {
+            position: fixed;
           }
           .modal_container {
             flex-direction: row;
@@ -170,12 +167,16 @@ class C_Modal extends LitElement {
         }
         @media screen and (min-width: 1024px) {
           :host {
-            width: 882px;
+            max-width: 882px;
             height: 568px;
           }
           .image-container img {
             width: 396px;
             height: 478px;
+            margin-bottom: 20px;
+          }
+          .modal_container {
+            max-width: 882px;
           }
         }
       `,
@@ -192,14 +193,13 @@ class C_Modal extends LitElement {
   constructor() {
     super();
     this.movie_prop = {
-      img_url: "../assets/remove.png",
-      vote: "7.3",
-      votes: "1260",
-      popularity: "100.2",
-      title: "A FISTFUL OF DEAD",
-      genre: "Western",
-      about:
-        "Four of the West’s most infamous outlaws assemble to steal a huge stash of gold from the most corrupt settlement of the gold rush towns. But not all goes to plan one is killed and the other three escapes with bags of gold hide out in the abandoned gold mine where they happen across another gang of three – who themselves were planning to hit the very same bank! As tensions rise, things go from bad to worse as they realise the bags of gold are filled with lead... they’ve been double crossed – but by who and how? ",
+      img_url: "",
+      vote: "",
+      votes: "",
+      popularity: "",
+      title: "",
+      genre: "",
+      about: "",
     };
     this.open = false;
   }
@@ -221,7 +221,7 @@ class C_Modal extends LitElement {
           </div>
           <div>
             <div class="modal_header">
-              <h3 class="title">A FIRST OF LEAD</h3>
+              <h3 class="title">${this.movie_prop.title}</h3>
               <div class="table">
                 <div class="col">
                   <div class="row movie_prop">Vote/Votes</div>

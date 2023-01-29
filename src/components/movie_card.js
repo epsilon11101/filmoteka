@@ -117,10 +117,27 @@ class MovieCard extends LitElement {
   }
 
   _cardHandler(e) {
-    const card_target = e.target.id;
+    let card_target = e.target.id;
     if (card_target) {
-      const $modal = this.shadowRoot.querySelector("c-modal");
-      $modal.open = true;
+      card_target = card_target.replace("/", "");
+
+      this.API.query_params = `movie/${card_target}`;
+      console.log(this.API.url);
+      this.API.getAllData().then((id_movie) => {
+        const movie_prop = {
+          img_url: `https://image.tmdb.org/t/p/w500${id_movie.poster_path}`,
+          vote: id_movie.vote_average,
+          votes: id_movie.vote_count,
+          popularity: id_movie.popularity,
+          title: id_movie.original_title,
+          genre: id_movie.genres.name,
+          about: id_movie.overview,
+        };
+
+        const $modal = this.shadowRoot.querySelector("c-modal");
+        $modal.open = true;
+        $modal.movie_prop = movie_prop;
+      });
     }
   }
 
