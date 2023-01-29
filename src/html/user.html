@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>USER</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="contenedor_carga"><div id="carga"></div></div>
     <c-header url="../assets/desktop_user.png">
-        <c-nav>
-            <c-button title="WATCHED" slot="button"></c-button>
-            <c-button title="QUEUE"  slot="button"></c-button>
-        </c-nav>
+      <c-nav>
+        <c-button title="WATCHED" slot="button"></c-button>
+        <c-button title="QUEUE" slot="button"></c-button>
+      </c-nav>
     </c-header>
 
-</body>
+    <script>
+      window.onload = function () {
+        var contenedor = document.getElementById("contenedor_carga");
+        contenedor.style.visibility = "hidden";
+        contenedor.style.opacity = "0";
+      };
+    </script>
+  </body>
 </html>
