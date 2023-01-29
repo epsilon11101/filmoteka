@@ -137,6 +137,7 @@ class C_Modal extends LitElement {
         }
         p {
           line-height: 20px;
+          overflow-y: hidden;
         }
         @media screen and (min-width: 767px) {
           :host {
