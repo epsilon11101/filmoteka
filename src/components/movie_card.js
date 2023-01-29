@@ -9,6 +9,13 @@ class MovieCard extends LitElement {
         :host {
           display: block;
         }
+        .card{
+
+              display:flex;
+              justify-content:center;
+              align-items:center;
+              flex-wrap:wrap;
+        }
         .movieCard {
           font-size: 12px;
           color: var(--orange_primary);
@@ -39,7 +46,6 @@ class MovieCard extends LitElement {
           .movieCard {
             
             width: 294px;
-            padding: 30px 30px 0px;
           }
           .card {
             display: flex;
@@ -112,8 +118,10 @@ class MovieCard extends LitElement {
 
   _cardHandler(e) {
     const card_target = e.target.id;
-    const $modal = this.shadowRoot.querySelector("c-modal");
-    $modal.open = true;
+    if (card_target) {
+      const $modal = this.shadowRoot.querySelector("c-modal");
+      $modal.open = true;
+    }
   }
 
   render() {

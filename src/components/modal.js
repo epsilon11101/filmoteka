@@ -12,6 +12,8 @@ class C_Modal extends LitElement {
           color: black;
           text-align: left;
         } */
+        /* TODO: cambiar position absoluta en cel y las demas en fixed */
+        /* arreglar height de modal de escritorio */
         .wrapper {
           color: var(--black_primary);
           top: 0;
@@ -23,7 +25,7 @@ class C_Modal extends LitElement {
           height: 100vh;
           opacity: 0;
           backdrop-filter: blur(10px);
-          position: absolute;
+          position: fixed;
           z-index: 10;
           transition: opacity 0.25s ease-in;
         }
@@ -43,7 +45,7 @@ class C_Modal extends LitElement {
           justify-content: center;
           align-items: flex-start;
           padding-left: 10px;
-          top: 10%;
+          top: 1%;
         }
         .image-container {
           width: 100%;
