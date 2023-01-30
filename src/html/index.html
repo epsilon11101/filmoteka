@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/4050c71461.js" crossorigin="anonymous"></script>
     <title>FILMOTEKA</title>
 </head>
 <body>
-
-<c-nav></c-nav>
+    <c-header url="../assets/desktop_main.png">
+        <c-nav>
+            <c-search slot="search" >
+                <i class="fa-solid fa-magnifying-glass" slot="icon"></i>
+            </c-search>
+        </c-nav>
+    </c-header>
+<!-- <c-modal></c-modal> -->
+<movie-card></movie-card>
 </body>
 </html>
