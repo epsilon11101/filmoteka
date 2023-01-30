@@ -54,7 +54,7 @@ class C_Footer extends LitElement {
           color: #545454;
         }
 
-        .text-2 p a{
+        .text-2 p a {
           color: #545454;
         }
       `,
@@ -75,8 +75,8 @@ class C_Footer extends LitElement {
         <div class="text-1"><p>© 2020 | All Rights Reserved |</p></div>
         <div class="text-2">
           <p>
-            Developed with &nbsp; <img src=${heart} alt="heart" />&nbsp; by &nbsp; <a href="">GoIT
-            Students</a>
+            Developed with &nbsp; <img src=${heart} alt="heart" />&nbsp; by
+            &nbsp; <a href="">GoIT Students</a>
           </p>
         </div>
       </div>
