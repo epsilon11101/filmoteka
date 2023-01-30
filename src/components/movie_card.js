@@ -2,6 +2,7 @@ import { LitElement, html, css } from "lit";
 import "./modal";
 import MovieApi from "../scripts/movie_api";
 import notFound from "../assets/notfound.jpg";
+import { load } from "../scripts/local_save";
 
 class MovieCard extends LitElement {
   static get styles() {
@@ -71,6 +72,7 @@ class MovieCard extends LitElement {
       API: { type: Object },
       card_content: { type: String },
       searchContent: { type: String },
+      user: { type: Boolean },
     };
   }
 
@@ -79,16 +81,24 @@ class MovieCard extends LitElement {
     this.API = new MovieApi();
     this.card_content = "";
     this.searchContent = "";
+    this.user = false;
   }
 
   firstUpdated() {
-    this.API.get_Genre().then(this.generateMovies.bind(this));
+    if (!this.user) {
+      this.API.get_Genre().then(this.generateMovies.bind(this));
+    }
   }
 
   createMovieCard(movies, genres) {
-    const cards = movies.results
+    const cards = movies
       .map((movie) => {
-        const { title, genre_ids, vote_average: vote, id } = movie;
+        const { title, vote_average: vote, id } = movie;
+
+        const genre_ids =
+          "genre_ids" in movie
+            ? movie.genre_ids
+            : movie.genres.map((gen) => gen.id);
 
         let date = movie.release_date;
         let url = movie.poster_path;
@@ -119,7 +129,7 @@ class MovieCard extends LitElement {
     $card.innerHTML = "";
     this.API.getAllData()
       .then((movies) => {
-        $card.innerHTML = this.createMovieCard(movies, genres);
+        $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
         this.card_content = $card.innerHTML;
@@ -133,7 +143,7 @@ class MovieCard extends LitElement {
     $card.innerHTML = "";
     this.API.getAllData()
       .then((movies) => {
-        $card.innerHTML = this.createMovieCard(movies, genres);
+        $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
         this.card_content = $card.innerHTML;
@@ -143,6 +153,60 @@ class MovieCard extends LitElement {
   newCardContent() {
     this.API.query = this.searchContent;
     this.API.get_Genre().then(this.generateSearchMovies.bind(this));
+  }
+
+  Watched() {
+    this.innerHTML = "";
+    this.API.get_Genre().then(this.generateWatched.bind(this));
+  }
+  Queue() {
+    this.innerHTML = "";
+    this.API.get_Genre().then(this.generateQueue.bind(this));
+  }
+
+  generateWatched(genres) {
+    this.API.query_params = "trending/movie/week";
+    const $card = this.shadowRoot.querySelector(".card");
+    $card.innerHTML = "";
+    const watched = load("watched");
+    const watched_movies = [];
+    watched.map((movie_id) => {
+      this.API.query_params = `movie/${movie_id}`;
+      this.API.getAllData()
+        .then((movie) => {
+          watched_movies.push(movie);
+        })
+        .then(() => {
+          $card.innerHTML = this.createMovieCard(watched_movies, genres);
+        })
+        .finally(() => {
+          this.card_content = $card.innerHTML;
+        });
+    });
+
+    /* $card.innerHTML = this.createMovieCard(movies, genres); */
+  }
+  generateQueue(genres) {
+    this.API.query_params = "trending/movie/week";
+    const $card = this.shadowRoot.querySelector(".card");
+    $card.innerHTML = "";
+    const watched = load("queue");
+    const watched_movies = [];
+    watched.map((movie_id) => {
+      this.API.query_params = `movie/${movie_id}`;
+      this.API.getAllData()
+        .then((movie) => {
+          watched_movies.push(movie);
+        })
+        .then(() => {
+          $card.innerHTML = this.createMovieCard(watched_movies, genres);
+        })
+        .finally(() => {
+          this.card_content = $card.innerHTML;
+        });
+    });
+
+    /* $card.innerHTML = this.createMovieCard(movies, genres); */
   }
 
   _cardHandler(e) {
@@ -163,6 +227,7 @@ class MovieCard extends LitElement {
           title: id_movie.original_title,
           genre: id_movie.genres.name,
           about: id_movie.overview,
+          id: card_target,
         };
 
         const $modal = this.shadowRoot.querySelector("c-modal");

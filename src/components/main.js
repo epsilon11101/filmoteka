@@ -28,19 +28,33 @@ class C_Main extends LitElement {
     this.$movie_card = "";
   }
 
-  firstUpdated() {}
+  firstUpdated() {
+    this.$movie_card = this.shadowRoot.querySelector("movie-card");
+    this.$movie_card.user = false;
+  }
 
   get cardContent() {
     this.$movie_card = this.shadowRoot.querySelector("movie-card");
     this.card_html = this.$movie_card.card_content;
     return this.card_html;
   }
-  set cardContent(inner) {}
 
   setCardContent(inner) {
     this.$movie_card = this.shadowRoot.querySelector("movie-card");
     this.$movie_card.searchContent = inner;
     this.$movie_card.newCardContent();
+  }
+
+  async generateWatched() {
+    (await this.$movie_card) != null;
+    this.$movie_card = this.shadowRoot.querySelector("movie-card");
+    this.$movie_card.user = true;
+    this.$movie_card.Watched();
+  }
+
+  generateQueue() {
+    this.$movie_card = this.shadowRoot.querySelector("movie-card");
+    this.$movie_card.Queue();
   }
 
   render() {

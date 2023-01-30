@@ -115,14 +115,11 @@ class C_Nav extends LitElement {
           </ul>
         </div>
         <slot name="search"></slot>
-        <div class="nav-btn-container" @click="${this._btnHandler}">
+        <div class="nav-btn-container">
           <slot name="button"></slot>
         </div>
       </nav>
     `;
-  }
-  _btnHandler(e) {
-    console.log(e.target);
   }
 }
 

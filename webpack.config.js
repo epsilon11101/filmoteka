@@ -1,7 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin"),
   MiniCssExtractPlugin = require("mini-css-extract-plugin"),
   CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const loader = require("sass-loader");
+
 module.exports = {
   entry: {
     index_js: "./src/scripts/index.js",
@@ -19,14 +19,6 @@ module.exports = {
           loader: "babel-loader",
         },
       },
-      // {
-      //   test: /\.s[ac]ss$/i,
-      //   use: [
-      //     "style-loader",
-      //     "css-loader",
-      //     "sass-loader",
-      //   ],
-      // },
       {
         test: /\.css$/i,
         use: [
@@ -37,17 +29,12 @@ module.exports = {
             },
           },
           "css-loader",
-          // "sass-loader",
         ],
       },
 
       {
         test: /\.(jpe?g|png|svg|webp)$/i,
         use: ["file-loader?name=assets/[name].[ext]"],
-        // loader: "file-loader",
-        // options: {
-        //   name: "[path][name].[ext]",
-        // },
       },
       {
         test: /\.html$/i,
