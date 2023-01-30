@@ -56,6 +56,7 @@ class C_Page extends LitElement {
       pages: { type: Number },
       total_pages: { type: Number },
       restore_pages: { type: Boolean },
+      hidden: { type: Boolean },
     };
   }
 
@@ -65,9 +66,13 @@ class C_Page extends LitElement {
     this.total_pages = 0;
     this.pages = 1;
     this.restore_paes = true;
+    this.hidden = false;
   }
 
-  firstUpdated() {}
+  firstUpdated() {
+    this.hidden = document.URL.includes("index") ? false : true;
+    this.style.display = this.hidden ? "none" : "block";
+  }
 
   updated() {}
 
