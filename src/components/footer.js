@@ -37,14 +37,14 @@ class C_Footer extends LitElement {
         }
 
         .text-2 p {
-          width: 236px;
+          width: 250px;
           height: 15.84px;
           font-family: "Roboto";
           font-style: normal;
           font-weight: 400;
           font-size: 14px;
           line-height: 16px;
-          padding-left: 48px;
+          padding-left: 40px;
           padding-right: 36px;
           padding-bottom: 17px;
           display: flex;
@@ -56,6 +56,110 @@ class C_Footer extends LitElement {
 
         .text-2 p a {
           color: #545454;
+        }
+
+        @media screen and (min-width: 767px) {
+          .footer-container {
+            width: 767px;
+            min-height: 100px;
+            background-size: cover;
+            display: inline-block;
+          }
+
+          .text-1 p {
+            padding-top: 30px;
+            padding-left: 170px;
+            padding-bottom: 28px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            width: 175px;
+            height: 15.84px;
+          }
+
+          .text-2 p {
+            width: 260px;
+            height: 15.84px;
+
+            padding-left: 55px;
+            padding-top: 30px;
+            padding-right: 36px;
+            padding-bottom: 17px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+          }
+
+          .text-2 p a {
+            padding-left: 5px;
+          }
+
+          .text-2 {
+            display: flex;
+
+            align-items: baseline;
+            display: inline-block;
+          }
+
+          .text-1 {
+            width: 285px;
+            display: flex;
+            align-items: baseline;
+            display: inline-block;
+          }
+        }
+
+        @media screen and (min-width: 1024px) {
+          .footer-container {
+            width: 100%;
+            background-size: cover;
+            display: inline-block;
+          }
+
+          .text-1 p {
+            padding-top: 30px;
+            padding-left: 440px;
+            padding-bottom: 28px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            width: 196px;
+            height: 15.84px;
+          }
+
+          .text-2 p {
+            width: 290px;
+            height: 15.84px;
+
+            padding-left: 350px;
+            padding-top: 30px;
+            padding-right: 270px;
+            padding-bottom: 28px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+          }
+
+          .text-2 p a {
+            padding-left: 5px;
+            font-size: 16px;
+          }
+
+          .text-2 {
+            display: flex;
+
+            align-items: baseline;
+            display: inline-block;
+          }
+
+          .text-1 {
+            width: 285px;
+            display: flex;
+            align-items: baseline;
+            display: inline-block;
+          }
         }
       `,
     ];
