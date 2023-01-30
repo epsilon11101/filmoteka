@@ -1,5 +1,6 @@
 import { LitElement, html, css } from "lit";
 import "./modal";
+import "./page";
 import MovieApi from "../scripts/movie_api";
 import notFound from "../assets/notfound.jpg";
 import { load } from "../scripts/local_save";
@@ -73,6 +74,9 @@ class MovieCard extends LitElement {
       card_content: { type: String },
       searchContent: { type: String },
       user: { type: Boolean },
+      $nextbtn: { type: String },
+      $prevbtn: { type: String },
+      $page: { type: String },
     };
   }
 
@@ -84,10 +88,32 @@ class MovieCard extends LitElement {
     this.user = false;
   }
 
-  firstUpdated() {
+  async firstUpdated() {
+    await this.updateComplete;
+    this.renderCards();
+    this.btnEvents();
+  }
+
+  renderCards() {
     if (!this.user) {
       this.API.get_Genre().then(this.generateMovies.bind(this));
     }
+  }
+
+  btnEvents() {
+    this.$page = this.shadowRoot.querySelector("c-page");
+    this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
+    this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");
+    this.$nextbtn.addEventListener("click", (e) => {
+      this.$page.increment();
+      this.API.page = this.$page.page;
+      this.renderCards();
+    });
+    this.$prevbtn.addEventListener("click", (e) => {
+      this.$page.decrement();
+      this.API.page = this.$page.page;
+      this.renderCards();
+    });
   }
 
   createMovieCard(movies, genres) {
@@ -140,9 +166,11 @@ class MovieCard extends LitElement {
   generateMovies(genres) {
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
+    const page = this.shadowRoot.querySelector("c-page");
     $card.innerHTML = "";
     this.API.getAllData()
       .then((movies) => {
+        page.total_pages = movies.total_pages;
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
@@ -241,6 +269,7 @@ class MovieCard extends LitElement {
     return html`
       <c-modal></c-modal>
       <div class="card" @click="${this._cardHandler}"></div>
+      <c-page></c-page>
     `;
   }
 }

@@ -20,6 +20,7 @@ class C_Main extends LitElement {
     return {
       card_html: { type: String },
       $movie_card: { type: String },
+      $c_page: { type: String },
     };
   }
 
@@ -28,10 +29,7 @@ class C_Main extends LitElement {
     this.$movie_card = "";
   }
 
-  firstUpdated() {
-    this.$movie_card = this.shadowRoot.querySelector("movie-card");
-    this.$movie_card.user = false;
-  }
+  firstUpdated() {}
 
   get cardContent() {
     this.$movie_card = this.shadowRoot.querySelector("movie-card");
