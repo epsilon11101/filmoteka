@@ -51,11 +51,14 @@ class C_Search extends LitElement {
   }
 
   static get properties() {
-    return {};
+    return {
+      input_value: { type: String },
+    };
   }
 
   constructor() {
     super();
+    this.input_value = "";
   }
 
   firstUpdated() {}
@@ -68,6 +71,10 @@ class C_Search extends LitElement {
     </div>
     
     `;
+  }
+  _searchHandler() {
+    const $search = this.shadowRoot.querySelector("input");
+    this.input_value = $search.value;
   }
 }
 

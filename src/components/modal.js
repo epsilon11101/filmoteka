@@ -1,22 +1,14 @@
 import { LitElement, html, css } from "lit";
 import { classMap } from "lit/directives/class-map.js";
 import "./button";
-import "../assets/remove.png";
 
 class C_Modal extends LitElement {
   static get styles() {
     return [
       css`
-        /* :host {
-          display: block;
-          color: black;
-          text-align: left;
-        } */
-        /* TODO: cambiar position absoluta en cel y las demas en fixed */
-        /* arreglar height de modal de escritorio */
         .wrapper {
           color: var(--black_primary);
-          top: 0;
+          top: 0px;
           left: 0;
           display: flex;
           justify-content: center;
@@ -43,12 +35,12 @@ class C_Modal extends LitElement {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: flex-start;
           padding-left: 10px;
-          top: 1%;
+          top: 0;
+          overflow: auto;
+          max-height: 80%;
         }
         .image-container {
-          width: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -58,6 +50,7 @@ class C_Modal extends LitElement {
           width: 240px;
           height: 357px;
           object-fit: cover;
+          margin-top: 200px;
         }
         .modal_header {
           width: 100%;
@@ -136,6 +129,7 @@ class C_Modal extends LitElement {
         .title {
           font-size: 20px;
           line-height: 23.44px;
+          text-transform: uppercase;
         }
         h6,
         p {
@@ -143,18 +137,23 @@ class C_Modal extends LitElement {
         }
         p {
           line-height: 20px;
+          overflow: scroll;
+          height: 100px;
+          margin-right: 10px;
+          padding: 10px 10px;
         }
         @media screen and (min-width: 767px) {
           :host {
             width: 618px;
             height: 231px;
           }
+
           .modal_container {
             flex-direction: row;
             gap: 32px;
             justify-content: center;
             align-items: center;
-            top: 1%;
+            top: -20%;
           }
           span.btn-close {
             min-width: 30px;
@@ -166,6 +165,7 @@ class C_Modal extends LitElement {
           .image-container img {
             width: 264px;
             height: 374px;
+            margin-top: 0;
           }
         }
         @media screen and (min-width: 1024px) {
@@ -176,6 +176,10 @@ class C_Modal extends LitElement {
           .image-container img {
             width: 396px;
             height: 478px;
+            margin-bottom: 20px;
+          }
+          .modal_container {
+            width: 882px;
           }
         }
       `,
@@ -192,14 +196,14 @@ class C_Modal extends LitElement {
   constructor() {
     super();
     this.movie_prop = {
-      img_url: "../assets/remove.png",
-      vote: "7.3",
-      votes: "1260",
-      popularity: "100.2",
-      title: "A FISTFUL OF DEAD",
-      genre: "Western",
-      about:
-        "Four of the West’s most infamous outlaws assemble to steal a huge stash of gold from the most corrupt settlement of the gold rush towns. But not all goes to plan one is killed and the other three escapes with bags of gold hide out in the abandoned gold mine where they happen across another gang of three – who themselves were planning to hit the very same bank! As tensions rise, things go from bad to worse as they realise the bags of gold are filled with lead... they’ve been double crossed – but by who and how? ",
+      img_url: "",
+      vote: "",
+      votes: "",
+      popularity: "",
+      title: "",
+      genre: "",
+      about: "",
+      id: "",
     };
     this.open = false;
   }
@@ -221,7 +225,7 @@ class C_Modal extends LitElement {
           </div>
           <div>
             <div class="modal_header">
-              <h3 class="title">A FIRST OF LEAD</h3>
+              <h3 class="title">${this.movie_prop.title}</h3>
               <div class="table">
                 <div class="col">
                   <div class="row movie_prop">Vote/Votes</div>
@@ -231,8 +235,9 @@ class C_Modal extends LitElement {
                 </div>
                 <div class="col">
                   <div class="row movie_data">
-                    <span>${this.movie_prop.vote}</span>/${this.movie_prop
-                      .votes}
+                    <span>${this.movie_prop.vote}</span>/${
+      this.movie_prop.votes
+    }
                   </div>
                   <div class="row movie_data">
                     ${this.movie_prop.popularity}
@@ -246,9 +251,13 @@ class C_Modal extends LitElement {
               <h6>ABOUT</h6>
               <p>${this.movie_prop.about}</p>
             </div>
-            <div class="modal_footer">
-              <c-button title="ADD TO WATCHED"></c-button>
-              <c-button title="ADD TO QUEUE"></c-button>
+            <div class="modal_footer" ">
+              <c-button title="ADD TO WATCHED" @click="${
+                this._btnHandler
+              }"></c-button>
+              <c-button title="ADD TO QUEUE" @click="${
+                this._btnHandler
+              }"></c-button>
             </div>
           </div>
         </div>
@@ -258,6 +267,14 @@ class C_Modal extends LitElement {
 
   _closeHandler() {
     this.open = false;
+  }
+  _btnHandler(e) {
+    console.log(e.target.title);
+    if (e.target.title.includes("WATCHED")) {
+      e.target._handleWatched("watched", this.movie_prop.id);
+    } else {
+      e.target._handleWatched("queue", this.movie_prop.id);
+    }
   }
 }
 

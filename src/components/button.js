@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import { save, load } from "../scripts/local_save";
 
 class C_Button extends LitElement {
   static get styles() {
@@ -42,6 +43,21 @@ class C_Button extends LitElement {
 
   render() {
     return html` <button>${this.title}</button> `;
+  }
+
+  _handleWatched(key, value) {
+    const watched = [];
+    const data = load(key);
+    watched.push(...data);
+    if (!watched.includes(value)) watched.push(value);
+    save(key, watched);
+  }
+  _handleQueue(key, value) {
+    const queue = [];
+    const data = load(key);
+    queue.push(...data);
+    if (!queue.includes(value)) queue.push(value);
+    save(key, queue);
   }
 }
 

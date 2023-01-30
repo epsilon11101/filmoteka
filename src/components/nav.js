@@ -1,6 +1,5 @@
 import { LitElement, html, css } from "lit";
 import "./button";
-import "./search";
 import images from "../scripts/assets";
 
 class C_Nav extends LitElement {
@@ -94,17 +93,7 @@ class C_Nav extends LitElement {
     super();
   }
 
-  firstUpdated() {
-    // console.log(this.url);
-    // if (this.user_nav) {
-    //   const $nav_container = this.shadowRoot.querySelector(".nav-container");
-    //   $nav_container.style.backgroundImage = `url(${bg_mobile})`;
-    //   const $button = this.shadowRoot.querySelector('[title="WATCHED"]');
-    //   $button.addEventListener("click", () => {
-    //     console.log("boton presionado");
-    //   });
-    // }
-  }
+  firstUpdated() {}
 
   render() {
     return html`
@@ -126,14 +115,11 @@ class C_Nav extends LitElement {
           </ul>
         </div>
         <slot name="search"></slot>
-        <div class="nav-btn-container" @click="${this._btnHandler}">
+        <div class="nav-btn-container">
           <slot name="button"></slot>
         </div>
       </nav>
     `;
-  }
-  _btnHandler(e) {
-    console.log(e.target);
   }
 }
 

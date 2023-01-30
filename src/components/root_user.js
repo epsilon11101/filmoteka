@@ -3,7 +3,8 @@ import "./main";
 import "../components/header";
 import "../components/search";
 import "../components/main";
-class C_Root extends LitElement {
+
+class C_Root_U extends LitElement {
   static get styles() {
     return [
       css`
@@ -25,15 +26,8 @@ class C_Root extends LitElement {
   firstUpdated() {}
 
   updated() {
-    const $header = this._slottedChildren;
-    const $nav = $header.children[0];
-    const $search_component = $nav.children[0];
-    const $search_btn = $nav.children[0].children[0];
     const $main = this.shadowRoot.querySelector("c-main");
-    $search_btn.addEventListener("click", () => {
-      $search_component._searchHandler();
-      $main.setCardContent($search_component.input_value);
-    });
+    $main.generateWatched();
   }
 
   get _slottedChildren() {
@@ -43,10 +37,24 @@ class C_Root extends LitElement {
 
   render() {
     return html`
-      <slot></slot>
+      <c-header url="../assets/desktop_user.png">
+        <c-nav @click="${this._btnHandler}">
+          <c-button title="WATCHED" slot="button"></c-button>
+          <c-button title="QUEUE" slot="button"></c-button>
+        </c-nav>
+      </c-header>
       <c-main></c-main>
     `;
   }
+
+  _btnHandler(e) {
+    const $main = this.shadowRoot.querySelector("c-main");
+    if (e.target.title.includes("WATCHED")) {
+      $main.generateWatched();
+    } else {
+      $main.generateQueue();
+    }
+  }
 }
 
-customElements.define("c-root", C_Root);
+customElements.define("c-root_u", C_Root_U);
