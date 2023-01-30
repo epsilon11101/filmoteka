@@ -130,14 +130,15 @@ class MovieCard extends LitElement {
     this.API.query_params = "search/movie";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
-    this.API.getAllData()
-      /* .then(() => {
    
-      }) */
+    this.API.getAllData()
+
       .then((movies) => {
+        
         if (movies.results.length == 0) {
           Notiflix.Notify.failure("sorry, not found");
         }
+
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
