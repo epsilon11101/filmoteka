@@ -3,6 +3,7 @@ import "./main";
 import "../components/header";
 import "../components/search";
 import "../components/main";
+import "../components/footer";
 class C_Root extends LitElement {
   static get styles() {
     return [
@@ -45,6 +46,7 @@ class C_Root extends LitElement {
     return html`
       <slot></slot>
       <c-main></c-main>
+      <c-footer></c-footer>
     `;
   }
 }
