@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/4050c71461.js" crossorigin="anonymous"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/4050c71461.js"
+      crossorigin="anonymous"
+    ></script>
     <title>FILMOTEKA</title>
-</head>
-<body>
-<c-root>
-    <c-header url="../assets/desktop_main.png">
+  </head>
+  <body>
+    <c-root>
+      <c-header url="../assets/desktop_main.png">
         <c-nav>
           <c-search slot="search">
             <i class="fa-solid fa-magnifying-glass" slot="icon"></i>
           </c-search>
         </c-nav>
-    </c-header>
-</c-root>
-</body>
+      </c-header>
+      <div id="contenedor_carga"><div id="carga"></div></div>
+    </c-root>
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+  </body>
 </html>

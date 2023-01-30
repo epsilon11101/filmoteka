@@ -39,9 +39,10 @@
     "alertifyjs": "^1.13.1",
     "axios": "^1.2.3",
     "lit": "^2.6.1",
-    "lit-css-loader": "^2.0.0"
+    "lit-css-loader": "^2.0.0",
+    "notiflix": "^3.2.6"
   },
-    "browser": {
+  "browser": {
     "fs": false,
     "os": false,
     "path": false
