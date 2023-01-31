@@ -1,14 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
 
 :root {
-  --white_primary: #fff;
-  --orange_primary: #ff6b08;
-  --red_primary: #ff001b;
-  --black_primary: #000;
-  --primary_gray: #8c8c8c;
-  --roboto: "Roboto", sans-serif;
-  --bold: 400;
-  --bolder: 500;
+
+    --white_primary: #FFF;
+    --orange_primary: #FF6B08;
+    --red_primary: #FF001B;
+    --black_primary: #000;
+    --primary_gray: #8C8C8C;
+    --secundary_white:#F7F7F7;
+    --roboto: 'Roboto',
+        sans-serif;
+    --bold: 400;
+    --bolder: 500;
+
 }
 
 * {
