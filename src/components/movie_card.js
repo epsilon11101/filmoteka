@@ -4,6 +4,9 @@ import "./page";
 import MovieApi from "../scripts/movie_api";
 import notFound from "../assets/notfound.jpg";
 import { load } from "../scripts/local_save";
+import Notiflix from "notiflix";
+/* import alertify from "alertify" */
+//var alertify = require('alertifyjs');
 
 class MovieCard extends LitElement {
   static get styles() {
@@ -153,8 +156,15 @@ class MovieCard extends LitElement {
     this.API.query_params = "search/movie";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
+   
     this.API.getAllData()
+
       .then((movies) => {
+        
+        if (movies.results.length == 0) {
+          Notiflix.Notify.failure("sorry, not found");
+        }
+
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
