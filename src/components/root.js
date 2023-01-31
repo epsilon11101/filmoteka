@@ -4,6 +4,7 @@ import "../components/header";
 import "../components/search";
 import "../components/main";
 import "../components/footer";
+import Notiflix from "notiflix";
 class C_Root extends LitElement {
   static get styles() {
     return [
@@ -35,7 +36,9 @@ class C_Root extends LitElement {
     const $main = this.shadowRoot.querySelector("c-main");
     $search_btn.addEventListener("click", () => {
       $search_component._searchHandler();
-      $main.setCardContent($search_component.input_value);
+      if ($search_component.input_value)
+        $main.setCardContent($search_component.input_value);
+      else Notiflix.Notify.warning("Fill the input field");
     });
   }
 
@@ -44,7 +47,9 @@ class C_Root extends LitElement {
       if (e.key == "Enter") {
         e.target._searchHandler();
         const $main = this.shadowRoot.querySelector("c-main");
-        $main.setCardContent(e.target.input_value);
+        if (e.target.input_value.length)
+          $main.setCardContent(e.target.input_value);
+        else Notiflix.Notify.warning("Fill the input field");
       }
     }
   }

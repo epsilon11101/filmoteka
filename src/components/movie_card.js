@@ -163,13 +163,14 @@ class MovieCard extends LitElement {
     this.API.getAllData()
 
       .then((movies) => {
+        if (!movies.results.length) {
+          Notiflix.Notify.failure("sorry movie not found");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        }
+
         $card.innerHTML = this.createMovieCard(movies.results, genres);
-      })
-      .catch(() => {
-        Notiflix.Notify.failure("sorry, not found");
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
       })
       .finally(() => {
         this.card_content = $card.innerHTML;
