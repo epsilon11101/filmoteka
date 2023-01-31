@@ -5,8 +5,6 @@ import MovieApi from "../scripts/movie_api";
 import notFound from "../assets/notfound.jpg";
 import { load } from "../scripts/local_save";
 import Notiflix from "notiflix";
-/* import alertify from "alertify" */
-//var alertify = require('alertifyjs');
 
 class MovieCard extends LitElement {
   static get styles() {
@@ -91,6 +89,7 @@ class MovieCard extends LitElement {
     this.searchContent = "";
     this.user = false;
     this.searching = true;
+    this.API.page = 1;
   }
 
   async firstUpdated() {
@@ -106,7 +105,6 @@ class MovieCard extends LitElement {
   }
 
   btnEvents() {
-    console.log(this.API.url, this.searching);
     this.$page = this.shadowRoot.querySelector("c-page");
     this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
     this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");
@@ -165,8 +163,11 @@ class MovieCard extends LitElement {
     this.API.getAllData()
 
       .then((movies) => {
-        if (movies.results.length == 0) {
-          Notiflix.Notify.failure("sorry, not found");
+        if (!movies.results.length) {
+          Notiflix.Notify.failure("sorry movie not found");
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
         }
 
         $card.innerHTML = this.createMovieCard(movies.results, genres);
