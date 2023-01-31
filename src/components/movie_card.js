@@ -77,6 +77,7 @@ class MovieCard extends LitElement {
       card_content: { type: String },
       searchContent: { type: String },
       user: { type: Boolean },
+      searching: { type: Boolean },
       $nextbtn: { type: String },
       $prevbtn: { type: String },
       $page: { type: String },
@@ -89,6 +90,7 @@ class MovieCard extends LitElement {
     this.card_content = "";
     this.searchContent = "";
     this.user = false;
+    this.searching = true;
   }
 
   async firstUpdated() {
@@ -104,18 +106,21 @@ class MovieCard extends LitElement {
   }
 
   btnEvents() {
+    console.log(this.API.url, this.searching);
     this.$page = this.shadowRoot.querySelector("c-page");
     this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
     this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");
     this.$nextbtn.addEventListener("click", (e) => {
       this.$page.increment();
       this.API.page = this.$page.page;
-      this.renderCards();
+      if (this.searching) this.renderCards();
+      else this.newCardContent();
     });
     this.$prevbtn.addEventListener("click", (e) => {
       this.$page.decrement();
       this.API.page = this.$page.page;
-      this.renderCards();
+      if (this.searching) this.renderCards();
+      else this.newCardContent();
     });
   }
 
@@ -156,11 +161,10 @@ class MovieCard extends LitElement {
     this.API.query_params = "search/movie";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
-   
+
     this.API.getAllData()
 
       .then((movies) => {
-        
         if (movies.results.length == 0) {
           Notiflix.Notify.failure("sorry, not found");
         }
@@ -190,6 +194,13 @@ class MovieCard extends LitElement {
 
   newCardContent() {
     this.API.query = this.searchContent;
+    if (this.searching) {
+      this.API.page = 1;
+      this.$page.page = 1;
+      this.$page.pages = 1;
+      this.$page.changeElements();
+    }
+    this.searching = false;
     this.API.get_Genre().then(this.generateSearchMovies.bind(this));
   }
 

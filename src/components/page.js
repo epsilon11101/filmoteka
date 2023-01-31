@@ -70,7 +70,7 @@ class C_Page extends LitElement {
   }
 
   firstUpdated() {
-    this.hidden = document.URL.includes("index") ? false : true;
+    this.hidden = document.URL.includes("user") ? true : false;
     this.style.display = this.hidden ? "none" : "block";
   }
 
