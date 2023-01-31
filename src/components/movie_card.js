@@ -1,8 +1,12 @@
 import { LitElement, html, css } from "lit";
 import "./modal";
+import "./page";
 import MovieApi from "../scripts/movie_api";
 import notFound from "../assets/notfound.jpg";
 import { load } from "../scripts/local_save";
+import Notiflix from "notiflix";
+/* import alertify from "alertify" */
+//var alertify = require('alertifyjs');
 
 class MovieCard extends LitElement {
   static get styles() {
@@ -73,6 +77,10 @@ class MovieCard extends LitElement {
       card_content: { type: String },
       searchContent: { type: String },
       user: { type: Boolean },
+      searching: { type: Boolean },
+      $nextbtn: { type: String },
+      $prevbtn: { type: String },
+      $page: { type: String },
     };
   }
 
@@ -82,12 +90,38 @@ class MovieCard extends LitElement {
     this.card_content = "";
     this.searchContent = "";
     this.user = false;
+    this.searching = true;
   }
 
-  firstUpdated() {
+  async firstUpdated() {
+    await this.updateComplete;
+    this.renderCards();
+    this.btnEvents();
+  }
+
+  renderCards() {
     if (!this.user) {
       this.API.get_Genre().then(this.generateMovies.bind(this));
     }
+  }
+
+  btnEvents() {
+    console.log(this.API.url, this.searching);
+    this.$page = this.shadowRoot.querySelector("c-page");
+    this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
+    this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");
+    this.$nextbtn.addEventListener("click", (e) => {
+      this.$page.increment();
+      this.API.page = this.$page.page;
+      if (this.searching) this.renderCards();
+      else this.newCardContent();
+    });
+    this.$prevbtn.addEventListener("click", (e) => {
+      this.$page.decrement();
+      this.API.page = this.$page.page;
+      if (this.searching) this.renderCards();
+      else this.newCardContent();
+    });
   }
 
   createMovieCard(movies, genres) {
@@ -127,8 +161,14 @@ class MovieCard extends LitElement {
     this.API.query_params = "search/movie";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
+
     this.API.getAllData()
+
       .then((movies) => {
+        if (movies.results.length == 0) {
+          Notiflix.Notify.failure("sorry, not found");
+        }
+
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
@@ -140,9 +180,11 @@ class MovieCard extends LitElement {
   generateMovies(genres) {
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
+    const page = this.shadowRoot.querySelector("c-page");
     $card.innerHTML = "";
     this.API.getAllData()
       .then((movies) => {
+        page.total_pages = movies.total_pages;
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
@@ -152,6 +194,13 @@ class MovieCard extends LitElement {
 
   newCardContent() {
     this.API.query = this.searchContent;
+    if (this.searching) {
+      this.API.page = 1;
+      this.$page.page = 1;
+      this.$page.pages = 1;
+      this.$page.changeElements();
+    }
+    this.searching = false;
     this.API.get_Genre().then(this.generateSearchMovies.bind(this));
   }
 
@@ -241,6 +290,7 @@ class MovieCard extends LitElement {
     return html`
       <c-modal></c-modal>
       <div class="card" @click="${this._cardHandler}"></div>
+      <c-page></c-page>
     `;
   }
 }
