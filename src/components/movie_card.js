@@ -91,6 +91,7 @@ class MovieCard extends LitElement {
     this.searchContent = "";
     this.user = false;
     this.searching = true;
+    this.API.page = 1;
   }
 
   async firstUpdated() {
@@ -106,7 +107,6 @@ class MovieCard extends LitElement {
   }
 
   btnEvents() {
-    console.log(this.API.url, this.searching);
     this.$page = this.shadowRoot.querySelector("c-page");
     this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
     this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");

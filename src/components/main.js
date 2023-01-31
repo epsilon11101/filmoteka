@@ -40,6 +40,7 @@ class C_Main extends LitElement {
   setCardContent(inner) {
     this.$movie_card = this.shadowRoot.querySelector("movie-card");
     this.$movie_card.searchContent = inner;
+    this.$movie_card.searching = true;
     this.$movie_card.newCardContent();
   }
 
