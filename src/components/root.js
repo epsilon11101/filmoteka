@@ -23,7 +23,9 @@ class C_Root extends LitElement {
     super();
   }
 
-  firstUpdated() {}
+  firstUpdated() {
+    this.addEventListener("keyup", this._handleEnter);
+  }
 
   updated() {
     const $header = this._slottedChildren;
@@ -35,6 +37,16 @@ class C_Root extends LitElement {
       $search_component._searchHandler();
       $main.setCardContent($search_component.input_value);
     });
+  }
+
+  _handleEnter(e) {
+    if (e.target.slot.includes("search")) {
+      if (e.key == "Enter") {
+        e.target._searchHandler();
+        const $main = this.shadowRoot.querySelector("c-main");
+        $main.setCardContent(e.target.input_value);
+      }
+    }
   }
 
   get _slottedChildren() {
