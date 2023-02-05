@@ -95,6 +95,7 @@ class MovieCard extends LitElement {
   async firstUpdated() {
     await this.updateComplete;
     this.renderCards();
+    this.$page = this.shadowRoot.querySelector("c-page");
     this.btnEvents();
   }
 
@@ -105,7 +106,6 @@ class MovieCard extends LitElement {
   }
 
   btnEvents() {
-    this.$page = this.shadowRoot.querySelector("c-page");
     this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
     this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");
     this.$nextbtn.addEventListener("click", (e) => {
@@ -158,6 +158,7 @@ class MovieCard extends LitElement {
   generateSearchMovies(genres) {
     this.API.query_params = "search/movie";
     const $card = this.shadowRoot.querySelector(".card");
+    const page = this.shadowRoot.querySelector("c-page");
     $card.innerHTML = "";
 
     this.API.getAllData()
@@ -169,7 +170,7 @@ class MovieCard extends LitElement {
             location.reload();
           }, 1000);
         }
-
+        page.total_pages = movies.total_pages;
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
@@ -199,7 +200,7 @@ class MovieCard extends LitElement {
       this.API.page = 1;
       this.$page.page = 1;
       this.$page.pages = 1;
-      this.$page.changeElements();
+      /* this.$page.changeElements(); */
     }
     this.searching = false;
     this.API.get_Genre().then(this.generateSearchMovies.bind(this));
