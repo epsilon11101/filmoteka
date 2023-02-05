@@ -186,15 +186,13 @@ class C_Page extends LitElement {
       isCurrentBtn ? e.classList.add("active") : e.classList.remove("active");
     });
 
-    const $current_btn = elements[current];
-
-    if (
+    const isLastActiveButton =
       current === elements.length - 1 &&
-      $current_btn.classList.contains("active") &&
-      parseInt($current_btn.innerText) === this.total_pages - 1
-    ) {
-      const $last_btn = this.shadowRoot.querySelector("[type='next']");
-      $last_btn.classList.add("disabled");
+      elements[current].classList.contains("active") &&
+      parseInt(elements[current].innerText) === this.total_pages - 1;
+
+    if (isLastActiveButton) {
+      this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
     }
   }
 
