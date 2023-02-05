@@ -143,19 +143,6 @@ class C_Page extends LitElement {
     else {
       this.resetButtons($change_btns);
     }
-
-    //LO QUE INTENTO HACER AQUI ES OBTENER EL ULTIMO BOTON
-    //PARA SABER SI ESTOY EN EL ULTIMO BOTON
-    // const currentBtn = parseInt(
-    //   $change_btns[this.current_page - 2].innerText
-    // );
-    // console.log(currentBtn);
-    // const $last_btn = this.shadowRoot.querySelector("[type='next']");
-    // if (this.lastButton === this.total_pages - 1) {
-    //   if (this.lastButton.classList.contains("active")) {
-    //     $last_btn.classList.add("disabled");
-    //   }
-    // }
   }
 
   //return all active buttons
@@ -191,9 +178,8 @@ class C_Page extends LitElement {
       elements[current].classList.contains("active") &&
       parseInt(elements[current].innerText) === this.total_pages - 1;
 
-    if (isLastActiveButton) {
+    if (isLastActiveButton)
       this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
-    }
   }
 
   decrement() {
