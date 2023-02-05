@@ -49,12 +49,18 @@ class C_Page extends LitElement {
           background-color: var(--secundary_white);
           color: var(--black_primary);
         }
-        li:nth-child(2) {
-          background-color: var(--orange_primary);
-          color: var(--white_primary);
-        }
+
         .hide {
           display: none;
+        }
+        .disabled {
+          pointer-events: none;
+          opacity: 0.5;
+          background-color: red;
+        }
+        li.active {
+          background-color: var(--orange_primary);
+          color: var(--white_primary);
         }
       `,
     ];
@@ -96,7 +102,7 @@ class C_Page extends LitElement {
       <div>
         <ul @click="${this._handleSelecteElement}">
           <li type="prev"><-</li>
-          <li id="init">1</li>
+          <li id="init" class="active">1</li>
           <li class="hide">...</li>
           <li class="btn-page hide btn">2</li>
           <li class="btn-page hide btn">3</li>
@@ -113,35 +119,43 @@ class C_Page extends LitElement {
   }
 
   increment() {
-    //increment button until limit
-    this.current_page += 1;
-    //increment page until limit
+    this.current_page = Math.min(++this.current_page, this.total_pages);
+
     this.page =
       this.page >= this.total_pages ? this.total_pages : this.page + 1;
     this.changeUpPage();
-
-    console.table({
-      currentBtn: this.current_page,
-      currentPage: this.page,
-    });
   }
   //change page to up
   changeUpPage() {
     //get all active btns
     const $change_btns = this.getActiveButtons();
+    const lastButton = parseInt($change_btns[2].innerText);
 
     if (!$change_btns.length) {
       console.log("sin botones");
       return;
     }
 
-    const lastButton = parseInt($change_btns[2].innerText);
-
-    //change btn color depend of page
     if (this.page <= lastButton)
+      //change btn color depend of page
       this.changeBtnStyle($change_btns, this.current_page - 1);
     //reset current button to 1st one
-    else this.resetButtons($change_btns);
+    else {
+      this.resetButtons($change_btns);
+    }
+
+    //LO QUE INTENTO HACER AQUI ES OBTENER EL ULTIMO BOTON
+    //PARA SABER SI ESTOY EN EL ULTIMO BOTON
+    // const currentBtn = parseInt(
+    //   $change_btns[this.current_page - 2].innerText
+    // );
+    // console.log(currentBtn);
+    // const $last_btn = this.shadowRoot.querySelector("[type='next']");
+    // if (this.lastButton === this.total_pages - 1) {
+    //   if (this.lastButton.classList.contains("active")) {
+    //     $last_btn.classList.add("disabled");
+    //   }
+    // }
   }
 
   //return all active buttons
@@ -153,6 +167,7 @@ class C_Page extends LitElement {
 
   //reset buttons
   resetButtons($change_btns) {
+    console.log("reseteando botones");
     this.current_page = 1;
     this.changeBtnStyle($change_btns, 0);
     $change_btns.forEach((e, i) => {
@@ -165,16 +180,22 @@ class C_Page extends LitElement {
 
   //CHANGE THE COLOR AND STYLE OF ELEMENTS
 
-  changeBtnStyle(elements, index) {
+  changeBtnStyle(elements, current) {
     elements.forEach((e, i) => {
-      let isCurrentBtn = i === index;
-      e.style.backgroundColor = isCurrentBtn
-        ? "var(--orange_primary)"
-        : "var(--white_primary)";
-      e.style.color = isCurrentBtn
-        ? "var(--white_primary)"
-        : "var(--black_primary)";
+      let isCurrentBtn = i === current;
+      isCurrentBtn ? e.classList.add("active") : e.classList.remove("active");
     });
+
+    const $current_btn = elements[current];
+
+    if (
+      current === elements.length - 1 &&
+      $current_btn.classList.contains("active") &&
+      parseInt($current_btn.innerText) === this.total_pages - 1
+    ) {
+      const $last_btn = this.shadowRoot.querySelector("[type='next']");
+      $last_btn.classList.add("disabled");
+    }
   }
 
   decrement() {
