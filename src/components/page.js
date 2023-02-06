@@ -119,8 +119,7 @@ class C_Page extends LitElement {
   }
 
   increment() {
-    this.current_page = Math.min(++this.current_page, this.total_pages);
-
+    this.current_page = this.current_page <= 2 ? this.current_page + 1 : 0;
     this.page =
       this.page >= this.total_pages ? this.total_pages : this.page + 1;
     this.changeUpPage();
@@ -129,19 +128,20 @@ class C_Page extends LitElement {
   changeUpPage() {
     //get all active btns
     const $change_btns = this.getActiveButtons();
-    const lastButton = parseInt($change_btns[2].innerText);
+    const $lastButton = parseInt($change_btns[2].innerText);
 
     if (!$change_btns.length) {
       console.log("sin botones");
       return;
     }
 
-    if (this.page <= lastButton)
+    if (this.page <= $lastButton) {
       //change btn color depend of page
       this.changeBtnStyle($change_btns, this.current_page - 1);
+    }
     //reset current button to 1st one
     else {
-      this.resetButtons($change_btns);
+      this.resetButtonsUP($change_btns);
     }
   }
 
@@ -153,8 +153,7 @@ class C_Page extends LitElement {
   }
 
   //reset buttons
-  resetButtons($change_btns) {
-    console.log("reseteando botones");
+  resetButtonsUP($change_btns) {
     this.current_page = 1;
     this.changeBtnStyle($change_btns, 0);
     $change_btns.forEach((e, i) => {
@@ -173,6 +172,9 @@ class C_Page extends LitElement {
       isCurrentBtn ? e.classList.add("active") : e.classList.remove("active");
     });
 
+    //TODO: AQUI TIENES QUE CHECAR QUE CUANDO SE DE CLIC
+    // EN EL ULTIMO BOTON SE PASE A LA ULTIMA PAGINA  SE DESHABILITE EL BOTON
+    //PROBABLEMENTE ESE METODO TENGA QUE IR EN OTRO LADO
     const isLastActiveButton =
       current === elements.length - 1 &&
       elements[current].classList.contains("active") &&
@@ -181,13 +183,44 @@ class C_Page extends LitElement {
     if (isLastActiveButton)
       this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
   }
-
+  //reset buttons
+  resetButtonsDown($change_btns) {
+    this.current_page = 3;
+    this.changeBtnStyle($change_btns, 2);
+    $change_btns.forEach((e, i) => {
+      e.innerText =
+        i === 0
+          ? parseInt($change_btns[$change_btns.length - 1].innerText) - 5
+          : parseInt($change_btns[0].innerText) + i;
+    });
+  }
   decrement() {
     //decrement button until limin
-    this.current_page -= 1;
+    this.current_page = this.current_page >= 0 ? this.current_page - 1 : 3;
     //decrement page until init
     this.page = this.page <= 1 ? 1 : this.page - 1;
-    console.table({ page: this.page, current_page: this.current_page });
+    this.changeDownPage();
+  }
+
+  changeDownPage() {
+    //get all active btns
+    const $change_btns = this.getActiveButtons();
+    const $firstButton = parseInt($change_btns[0].innerText);
+
+    if (!$change_btns.length) {
+      console.log("sin botones");
+      return;
+    }
+
+    if (this.page >= $firstButton) {
+      this.changeBtnStyle($change_btns, this.current_page - 1);
+    }
+    //change btn color depend of page
+
+    //reset current button to 1st one
+    else {
+      this.resetButtonsDown($change_btns);
+    }
   }
 
   //return all buttons whith .hide class
@@ -213,7 +246,6 @@ class C_Page extends LitElement {
     const btns = this.allBtns.filter((e) => e.style.display === "flex");
     //remove initilal buttons 1 ... and total_pages
     this.total_buttons = btns.length + 1 > 6 ? btns.length + 1 - 4 : 1;
-    console.log(this.total_buttons, this.total_pages);
   }
 }
 
