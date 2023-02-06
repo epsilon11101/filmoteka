@@ -102,7 +102,7 @@ class C_Page extends LitElement {
       <div>
         <ul @click="${this._handleSelecteElement}">
           <li type="prev"><-</li>
-          <li id="init" class="active">1</li>
+          <li class="init active">1</li>
           <li class="hide">...</li>
           <li class="btn-page hide btn">2</li>
           <li class="btn-page hide btn">3</li>
@@ -119,6 +119,7 @@ class C_Page extends LitElement {
   }
 
   increment() {
+    this.shadowRoot.querySelector("[type='prev']").classList.remove("disabled");
     this.current_page = this.current_page <= 2 ? this.current_page + 1 : 0;
     this.page =
       this.page >= this.total_pages ? this.total_pages : this.page + 1;
@@ -135,73 +136,57 @@ class C_Page extends LitElement {
       return;
     }
 
-    if (this.page <= $lastButton) {
+    if (this.page <= $lastButton)
       //change btn color depend of page
       this.changeBtnStyle($change_btns, this.current_page - 1);
-    }
     //reset current button to 1st one
-    else {
-      this.resetButtonsUP($change_btns);
+    else this.resetButtonsUP($change_btns);
+
+    const isLastPosition =
+      $lastButton === this.page - 1 &&
+      $change_btns[2].classList.contains("active");
+
+    if (isLastPosition) {
+      this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
+      this.shadowRoot.querySelector(".last").classList.add("active");
+      this.getActiveButtons()[2].classList.remove("active");
+      this.current_page = 4;
     }
   }
-
   //return all active buttons
   getActiveButtons() {
     return [...this.shadowRoot.querySelectorAll(".btn")].filter(
       (e) => e.style.display != "none"
     );
   }
-
   //reset buttons
   resetButtonsUP($change_btns) {
-    this.current_page = 1;
-    this.changeBtnStyle($change_btns, 0);
-    $change_btns.forEach((e, i) => {
-      e.innerText =
-        i === 0
-          ? parseInt($change_btns[$change_btns.length - 1].innerText) + 1
-          : parseInt($change_btns[0].innerText) + i;
-    });
+    if (parseInt($change_btns[2].innerText) != this.total_pages - 1) {
+      this.current_page = 1;
+      this.changeBtnStyle($change_btns, 0);
+      $change_btns.forEach((e, i) => {
+        e.innerText =
+          i === 0
+            ? parseInt($change_btns[$change_btns.length - 1].innerText) + 1
+            : parseInt($change_btns[0].innerText) + i;
+      });
+    }
   }
-
   //CHANGE THE COLOR AND STYLE OF ELEMENTS
-
   changeBtnStyle(elements, current) {
     elements.forEach((e, i) => {
       let isCurrentBtn = i === current;
       isCurrentBtn ? e.classList.add("active") : e.classList.remove("active");
     });
-
-    //TODO: AQUI TIENES QUE CHECAR QUE CUANDO SE DE CLIC
-    // EN EL ULTIMO BOTON SE PASE A LA ULTIMA PAGINA  SE DESHABILITE EL BOTON
-    //PROBABLEMENTE ESE METODO TENGA QUE IR EN OTRO LADO
-    const isLastActiveButton =
-      current === elements.length - 1 &&
-      elements[current].classList.contains("active") &&
-      parseInt(elements[current].innerText) === this.total_pages - 1;
-
-    if (isLastActiveButton)
-      this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
-  }
-  //reset buttons
-  resetButtonsDown($change_btns) {
-    this.current_page = 3;
-    this.changeBtnStyle($change_btns, 2);
-    $change_btns.forEach((e, i) => {
-      e.innerText =
-        i === 0
-          ? parseInt($change_btns[$change_btns.length - 1].innerText) - 5
-          : parseInt($change_btns[0].innerText) + i;
-    });
   }
   decrement() {
     //decrement button until limin
+    this.shadowRoot.querySelector("[type='next']").classList.remove("disabled");
     this.current_page = this.current_page >= 0 ? this.current_page - 1 : 3;
     //decrement page until init
     this.page = this.page <= 1 ? 1 : this.page - 1;
     this.changeDownPage();
   }
-
   changeDownPage() {
     //get all active btns
     const $change_btns = this.getActiveButtons();
@@ -212,18 +197,36 @@ class C_Page extends LitElement {
       return;
     }
 
-    if (this.page >= $firstButton) {
+    if (this.page >= $firstButton)
       this.changeBtnStyle($change_btns, this.current_page - 1);
-    }
     //change btn color depend of page
-
     //reset current button to 1st one
-    else {
-      this.resetButtonsDown($change_btns);
+    else this.resetButtonsDown($change_btns);
+    const isFirstPosition =
+      $firstButton - 1 === this.page &&
+      $change_btns[0].classList.contains("active");
+
+    if (isFirstPosition) {
+      this.shadowRoot.querySelector("[type='prev']").classList.add("disabled");
+      this.shadowRoot.querySelector(".init").classList.add("active");
+      this.getActiveButtons()[0].classList.remove("active");
+      this.current_page = 0;
     }
   }
 
-  //return all buttons whith .hide class
+  //reset buttons
+  resetButtonsDown($change_btns) {
+    if (parseInt($change_btns[0].innerText) != 2) {
+      this.current_page = 3;
+      this.changeBtnStyle($change_btns, 2);
+      $change_btns.forEach((e, i) => {
+        e.innerText =
+          i === 0
+            ? parseInt($change_btns[$change_btns.length - 1].innerText) - 5
+            : parseInt($change_btns[0].innerText) + i;
+      });
+    }
+  } //return all buttons whith .hide class
   get allBtns() {
     return [...this.shadowRoot.querySelectorAll(".hide")];
   }
