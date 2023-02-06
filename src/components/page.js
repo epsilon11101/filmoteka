@@ -120,6 +120,7 @@ class C_Page extends LitElement {
 
   increment() {
     this.shadowRoot.querySelector("[type='prev']").classList.remove("disabled");
+    this.shadowRoot.querySelector(".init").classList.remove("active");
     this.current_page = this.current_page <= 2 ? this.current_page + 1 : 0;
     this.page =
       this.page >= this.total_pages ? this.total_pages : this.page + 1;
@@ -182,6 +183,7 @@ class C_Page extends LitElement {
   decrement() {
     //decrement button until limin
     this.shadowRoot.querySelector("[type='next']").classList.remove("disabled");
+    this.shadowRoot.querySelector(".last").classList.remove("active");
     this.current_page = this.current_page >= 0 ? this.current_page - 1 : 3;
     //decrement page until init
     this.page = this.page <= 1 ? 1 : this.page - 1;
