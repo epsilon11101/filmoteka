@@ -85,6 +85,7 @@ class C_Page extends LitElement {
     this.total_buttons = 0;
     this.restore_paes = true;
     this.hidden = false;
+    this.addEventListener("page-sent", this._handlePageSent);
   }
 
   firstUpdated() {
@@ -114,56 +115,150 @@ class C_Page extends LitElement {
       </div>
     `;
   }
-  _handleSelecteElement(e) {
-    this.btn_value = e.target.innerText;
-    if (this.btn_value === "...") {
-      console.log(e.target.attributes.val.value);
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener("page-sent", this._handleUpdateBtnsValues);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("page-sent");
+  }
+
+  _handleUpdateBtnsValues(e) {
+    const btnIndex = e.detail.clicked_index;
+    const isButton = ![0, 2, 6, 8].includes(btnIndex);
+
+    if (!isButton) return;
+
+    this.shadowRoot.querySelector("[type='prev']").classList.remove("disabled");
+    this.shadowRoot.querySelector("[type='next']").classList.remove("disabled");
+
+    const liElements = [...this.shadowRoot.querySelectorAll("li")];
+    liElements.forEach((btn) => btn.classList.remove("active"));
+
+    if (btnIndex === 1) {
+      this.page = 1;
+      this.current_page = 0;
+      this.shadowRoot.querySelector("[type='prev']").classList.add("disabled");
+    } else if (btnIndex === 7) {
+      this.page = this.total_pages;
+      this.current_page = 4;
+      this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
+      this.setDecrement(this.getActiveButtons().reverse());
+      this.shadowRoot.querySelector(".last").classList.add("active");
+    } else {
+      this.page = parseInt(e.detail.btnValue);
+      switch (btnIndex) {
+        case 3:
+          this.current_page = 1;
+          break;
+        case 4:
+          this.current_page = 2;
+          break;
+        case 5:
+          this.current_page = 3;
+          break;
+      }
+      liElements[btnIndex].classList.add("active");
     }
-    if (parseInt(this.btn_value)) {
-      this.page = parseInt(this.btn_value);
+  }
+
+  setDecrement(btns) {
+    for (let i = 0; i < btns.length; i++) {
+      btns[i].innerText = this.total_pages - (i + 1);
+    }
+  }
+
+  _handleSelecteElement(e) {
+    const btn = e.target;
+    const btnValue = btn.innerText;
+    const isNumber = parseInt(btnValue);
+    const liElements = this.shadowRoot.querySelectorAll("li");
+    const clicked_index = [...liElements].indexOf(btn);
+
+    if (btnValue === "...") {
+      console.log(btn.attributes.val.value);
+    } else if (isNumber) {
+      this.page = isNumber;
       this.dispatchEvent(
         new CustomEvent("page-sent", {
-          detail: this.btn_value,
+          detail: { btnValue, clicked_index },
           bubbles: true,
         })
       );
     }
   }
 
-  increment() {
-    this.shadowRoot.querySelector("[type='prev']").classList.remove("disabled");
-    this.shadowRoot.querySelector(".init").classList.remove("active");
-    this.current_page = this.current_page <= 2 ? this.current_page + 1 : 0;
-    this.page =
-      this.page >= this.total_pages ? this.total_pages : this.page + 1;
-    this.changeUpPage();
+  updatePage(isIncrement) {
+    const selector = isIncrement ? "[type='prev']" : "[type='next']";
+    const classToRemove = isIncrement ? ".init" : ".last";
+    this.shadowRoot.querySelector(selector).classList.remove("disabled");
+    this.shadowRoot.querySelector(classToRemove).classList.remove("active");
+    this.current_page = isIncrement
+      ? this.current_page <= 2
+        ? this.current_page + 1
+        : 0
+      : this.current_page >= 0
+      ? this.current_page - 1
+      : 3;
+    this.page = isIncrement
+      ? this.page >= this.total_pages
+        ? this.total_pages
+        : this.page + 1
+      : this.page <= 1
+      ? 1
+      : this.page - 1;
+    this.changePage(isIncrement);
   }
-  //change page to up
-  changeUpPage() {
-    //get all active btns
+
+  changePage(isUp) {
     const $change_btns = this.getActiveButtons();
-    const $lastButton = parseInt($change_btns[2].innerText);
+    let $firstButton, $lastButton;
 
     if (!$change_btns.length) {
       console.log("sin botones");
       return;
     }
 
-    if (this.page <= $lastButton)
-      //change btn color depend of page
-      this.changeBtnStyle($change_btns, this.current_page - 1);
-    //reset current button to 1st one
-    else this.resetButtonsUP($change_btns);
+    if (isUp) {
+      $lastButton = parseInt($change_btns[2].innerText);
+      if (this.page <= $lastButton) {
+        this.changeBtnStyle($change_btns, this.current_page - 1);
+      } else {
+        this.resetButtons($change_btns, "up");
+      }
+      const isLastPosition =
+        $lastButton === this.page - 1 &&
+        $change_btns[2].classList.contains("active");
 
-    const isLastPosition =
-      $lastButton === this.page - 1 &&
-      $change_btns[2].classList.contains("active");
+      if (isLastPosition) {
+        this.shadowRoot
+          .querySelector("[type='next']")
+          .classList.add("disabled");
+        this.shadowRoot.querySelector(".last").classList.add("active");
+        this.getActiveButtons()[2].classList.remove("active");
+        this.current_page = 4;
+      }
+    } else {
+      $firstButton = parseInt($change_btns[0].innerText);
+      if (this.page >= $firstButton) {
+        this.changeBtnStyle($change_btns, this.current_page - 1);
+      } else {
+        this.resetButtons($change_btns, "down");
+      }
+      const isFirstPosition =
+        $firstButton - 1 === this.page &&
+        $change_btns[0].classList.contains("active");
 
-    if (isLastPosition) {
-      this.shadowRoot.querySelector("[type='next']").classList.add("disabled");
-      this.shadowRoot.querySelector(".last").classList.add("active");
-      this.getActiveButtons()[2].classList.remove("active");
-      this.current_page = 4;
+      if (isFirstPosition) {
+        this.shadowRoot
+          .querySelector("[type='prev']")
+          .classList.add("disabled");
+        this.shadowRoot.querySelector(".init").classList.add("active");
+        this.getActiveButtons()[0].classList.remove("active");
+        this.current_page = 0;
+      }
     }
   }
   //return all active buttons
@@ -172,19 +267,7 @@ class C_Page extends LitElement {
       (e) => e.style.display != "none"
     );
   }
-  //reset buttons
-  resetButtonsUP($change_btns) {
-    if (parseInt($change_btns[2].innerText) != this.total_pages - 1) {
-      this.current_page = 1;
-      this.changeBtnStyle($change_btns, 0);
-      $change_btns.forEach((e, i) => {
-        e.innerText =
-          i === 0
-            ? parseInt($change_btns[$change_btns.length - 1].innerText) + 1
-            : parseInt($change_btns[0].innerText) + i;
-      });
-    }
-  }
+
   //CHANGE THE COLOR AND STYLE OF ELEMENTS
   changeBtnStyle(elements, current) {
     elements.forEach((e, i) => {
@@ -192,55 +275,25 @@ class C_Page extends LitElement {
       isCurrentBtn ? e.classList.add("active") : e.classList.remove("active");
     });
   }
-  decrement() {
-    //decrement button until limin
-    this.shadowRoot.querySelector("[type='next']").classList.remove("disabled");
-    this.shadowRoot.querySelector(".last").classList.remove("active");
-    this.current_page = this.current_page >= 0 ? this.current_page - 1 : 3;
-    //decrement page until init
-    this.page = this.page <= 1 ? 1 : this.page - 1;
-    this.changeDownPage();
-  }
-  changeDownPage() {
-    //get all active btns
-    const $change_btns = this.getActiveButtons();
-    const $firstButton = parseInt($change_btns[0].innerText);
 
-    if (!$change_btns.length) {
-      console.log("sin botones");
-      return;
-    }
-
-    if (this.page >= $firstButton)
-      this.changeBtnStyle($change_btns, this.current_page - 1);
-    //change btn color depend of page
-    //reset current button to 1st one
-    else this.resetButtonsDown($change_btns);
-    const isFirstPosition =
-      $firstButton - 1 === this.page &&
-      $change_btns[0].classList.contains("active");
-
-    if (isFirstPosition) {
-      this.shadowRoot.querySelector("[type='prev']").classList.add("disabled");
-      this.shadowRoot.querySelector(".init").classList.add("active");
-      this.getActiveButtons()[0].classList.remove("active");
-      this.current_page = 0;
-    }
-  }
-
-  //reset buttons
-  resetButtonsDown($change_btns) {
-    if (parseInt($change_btns[0].innerText) != 2) {
-      this.current_page = 3;
-      this.changeBtnStyle($change_btns, 2);
+  resetButtons($change_btns, direction) {
+    if (
+      (direction === "up" &&
+        parseInt($change_btns[2].innerText) != this.total_pages - 1) ||
+      (direction === "down" && parseInt($change_btns[0].innerText) != 2)
+    ) {
+      this.current_page = direction === "up" ? 1 : 3;
+      this.changeBtnStyle($change_btns, direction === "up" ? 0 : 2);
       $change_btns.forEach((e, i) => {
         e.innerText =
           i === 0
-            ? parseInt($change_btns[$change_btns.length - 1].innerText) - 5
+            ? parseInt($change_btns[$change_btns.length - 1].innerText) +
+              (direction === "up" ? 1 : -5)
             : parseInt($change_btns[0].innerText) + i;
       });
     }
-  } //return all buttons whith .hide class
+  }
+  //return all buttons whith .hide class
   get allBtns() {
     return [...this.shadowRoot.querySelectorAll(".hide")];
   }
@@ -267,6 +320,7 @@ class C_Page extends LitElement {
 
   restoreValues() {
     if (this.page <= 1) {
+      console.log("restaurando valores");
       this.shadowRoot.querySelector(".init").classList.add("active");
       this.shadowRoot.querySelector("[type='prev']").classList.add("disabled");
       this.shadowRoot
@@ -274,6 +328,10 @@ class C_Page extends LitElement {
         .classList.remove("disabled");
       this.page = 1;
       this.current_page = 0;
+
+      [...this.shadowRoot.querySelectorAll(".active")].map((btn, i) => {
+        if (i != 0) btn.classList.remove("active");
+      });
 
       this.getActiveButtons().forEach((btn, i) => {
         btn.classList.remove("active");

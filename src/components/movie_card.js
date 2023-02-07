@@ -109,13 +109,13 @@ class MovieCard extends LitElement {
     this.$nextbtn = this.$page.shadowRoot.querySelector("[type='next']");
     this.$prevbtn = this.$page.shadowRoot.querySelector("[type='prev']");
     this.$nextbtn.addEventListener("click", (e) => {
-      this.$page.increment();
+      this.$page.updatePage(true);
       this.API.page = this.$page.page;
       if (this.searching) this.renderCards();
       else this.newCardContent();
     });
     this.$prevbtn.addEventListener("click", (e) => {
-      this.$page.decrement();
+      this.$page.updatePage(false);
       this.API.page = this.$page.page;
       if (this.searching) this.renderCards();
       else this.newCardContent();
@@ -299,16 +299,9 @@ class MovieCard extends LitElement {
   }
 
   _handlePageSent(e) {
-    this.API.page = e.detail;
+    this.API.page = e.detail.btnValue;
     if (this.searching) this.renderCards();
     else this.newCardContent();
-
-    /* 
-    TODO: FALTA HACER QUE NUEVAMENTE LOS BOTONES SE ACUTALICEN
-    puede ser con un evenlistener cuando se haga el update
-    en el elemento hijo el ememento padre crea un 
-    evento que se propaga y el elemento hijo lo escucha
-    */
   }
 }
 
