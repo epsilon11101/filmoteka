@@ -252,6 +252,23 @@ class C_Page extends LitElement {
     //remove initilal buttons 1 ... and total_pages
     this.total_buttons = btns.length + 1 > 6 ? btns.length + 1 - 4 : 1;
   }
+
+  restoreValues() {
+    if (this.page <= 1) {
+      this.shadowRoot.querySelector(".init").classList.add("active");
+      this.shadowRoot.querySelector("[type='prev']").classList.add("disabled");
+      this.shadowRoot
+        .querySelector("[type='next']")
+        .classList.remove("disabled");
+      this.page = 1;
+      this.current_page = 0;
+
+      this.getActiveButtons().forEach((btn, i) => {
+        btn.classList.remove("active");
+        btn.innerText = i + 2;
+      });
+    }
+  }
 }
 
 customElements.define("c-page", C_Page);

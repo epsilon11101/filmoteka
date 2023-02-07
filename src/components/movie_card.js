@@ -171,6 +171,7 @@ class MovieCard extends LitElement {
           }, 1000);
         }
         page.total_pages = movies.total_pages;
+        page.restoreValues();
         $card.innerHTML = this.createMovieCard(movies.results, genres);
       })
       .finally(() => {
@@ -183,6 +184,7 @@ class MovieCard extends LitElement {
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
     const page = this.shadowRoot.querySelector("c-page");
+    page.restoreValues();
     $card.innerHTML = "";
     this.API.getAllData()
       .then((movies) => {
