@@ -294,8 +294,21 @@ class MovieCard extends LitElement {
     return html`
       <c-modal></c-modal>
       <div class="card" @click="${this._cardHandler}"></div>
-      <c-page></c-page>
+      <c-page @page-sent="${this._handlePageSent}"></c-page>
     `;
+  }
+
+  _handlePageSent(e) {
+    this.API.page = e.detail;
+    if (this.searching) this.renderCards();
+    else this.newCardContent();
+
+    /* 
+    TODO: FALTA HACER QUE NUEVAMENTE LOS BOTONES SE ACUTALICEN
+    puede ser con un evenlistener cuando se haga el update
+    en el elemento hijo el ememento padre crea un 
+    evento que se propaga y el elemento hijo lo escucha
+    */
   }
 }
 

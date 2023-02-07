@@ -103,11 +103,11 @@ class C_Page extends LitElement {
         <ul @click="${this._handleSelecteElement}">
           <li type="prev"><-</li>
           <li class="init active">1</li>
-          <li class="hide">...</li>
+          <li class="hide" val="dot_left">...</li>
           <li class="btn-page hide btn">2</li>
           <li class="btn-page hide btn">3</li>
           <li class="btn-page hide btn">4</li>
-          <li class="hide">...</li>
+          <li class="hide" val="dot_right">...</li>
           <li class="hide last">${this.total_pages}</li>
           <li type="next">-></li>
         </ul>
@@ -115,7 +115,19 @@ class C_Page extends LitElement {
     `;
   }
   _handleSelecteElement(e) {
-    this.btn_value = parseInt(e.target.innerText);
+    this.btn_value = e.target.innerText;
+    if (this.btn_value === "...") {
+      console.log(e.target.attributes.val.value);
+    }
+    if (parseInt(this.btn_value)) {
+      this.page = parseInt(this.btn_value);
+      this.dispatchEvent(
+        new CustomEvent("page-sent", {
+          detail: this.btn_value,
+          bubbles: true,
+        })
+      );
+    }
   }
 
   increment() {
