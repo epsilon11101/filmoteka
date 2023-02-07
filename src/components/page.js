@@ -101,7 +101,7 @@ class C_Page extends LitElement {
   render() {
     return html`
       <div>
-        <ul @click="${this._handleSelecteElement}">
+        <ul @click="${this._handleSelectedElement}">
           <li type="prev"><-</li>
           <li class="init active">1</li>
           <li class="hide" val="dot_left">...</li>
@@ -125,8 +125,13 @@ class C_Page extends LitElement {
     this.removeEventListener("page-sent");
   }
 
+  setDecrement(btns) {
+    for (let i = 0; i < btns.length; i++) {
+      btns[i].innerText = this.total_pages - (i + 1);
+    }
+  }
   _handleUpdateBtnsValues(e) {
-    const btnIndex = e.detail.clicked_index;
+    const btnIndex = e.detail.clickedIndex;
     const isButton = ![0, 2, 6, 8].includes(btnIndex);
 
     if (!isButton) return;
@@ -164,30 +169,49 @@ class C_Page extends LitElement {
     }
   }
 
-  setDecrement(btns) {
-    for (let i = 0; i < btns.length; i++) {
-      btns[i].innerText = this.total_pages - (i + 1);
+  _handleSelectedElement(e) {
+    const btn = e.target;
+    const btnValue = btn.innerText;
+    const liElements = this.shadowRoot.querySelectorAll("li");
+    const clickedIndex = [...liElements].indexOf(btn);
+
+    if (btnValue === "...") {
+      const value = btn.attributes.val.value;
+      const activeButtons = this.getActiveButtons();
+      const firstButton = activeButtons[0];
+      const lastButton = activeButtons[activeButtons.length - 1];
+
+      if (value.includes("left")) {
+        if (parseInt(firstButton.innerText) !== 2) {
+          this.resetButtons(activeButtons, "down");
+          this.page = parseInt(lastButton.innerText);
+        }
+      } else {
+        if (parseInt(lastButton.innerText) !== this.total_pages - 1) {
+          this.resetButtons(activeButtons, "up");
+          this.page = parseInt(firstButton.innerText);
+          this.shadowRoot
+            .querySelector("[type='prev']")
+            .classList.remove("disabled");
+          this.shadowRoot
+            .querySelector("[type='next']")
+            .classList.remove("disabled");
+        }
+      }
+      this._dispatchPageSentEvent(0, this.page);
+    } else if (parseInt(btnValue)) {
+      this.page = parseInt(btnValue);
+      this._dispatchPageSentEvent(clickedIndex, btnValue);
     }
   }
 
-  _handleSelecteElement(e) {
-    const btn = e.target;
-    const btnValue = btn.innerText;
-    const isNumber = parseInt(btnValue);
-    const liElements = this.shadowRoot.querySelectorAll("li");
-    const clicked_index = [...liElements].indexOf(btn);
-
-    if (btnValue === "...") {
-      console.log(btn.attributes.val.value);
-    } else if (isNumber) {
-      this.page = isNumber;
-      this.dispatchEvent(
-        new CustomEvent("page-sent", {
-          detail: { btnValue, clicked_index },
-          bubbles: true,
-        })
-      );
-    }
+  _dispatchPageSentEvent(clickedIndex, btnValue) {
+    this.dispatchEvent(
+      new CustomEvent("page-sent", {
+        detail: { btnValue, clickedIndex },
+        bubbles: true,
+      })
+    );
   }
 
   updatePage(isIncrement) {
@@ -320,7 +344,6 @@ class C_Page extends LitElement {
 
   restoreValues() {
     if (this.page <= 1) {
-      console.log("restaurando valores");
       this.shadowRoot.querySelector(".init").classList.add("active");
       this.shadowRoot.querySelector("[type='prev']").classList.add("disabled");
       this.shadowRoot
