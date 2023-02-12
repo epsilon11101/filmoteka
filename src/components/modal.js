@@ -232,7 +232,7 @@ class C_Modal extends LitElement {
           wrapper: true,
           open: this.open,
         })}"
-        
+        @click="${this._closeHandler}"
       >
         <div class="modal_container " >
           <span class="btn-close" @click="${this._closeHandler}">X</span>
