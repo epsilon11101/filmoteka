@@ -226,6 +226,7 @@ class MovieCard extends LitElement {
   }
 
   generateWatched(genres) {
+    Loading.standard("Loading...", { backgroundColor: "rgba(0,0,0,0.8)" });
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
@@ -239,6 +240,7 @@ class MovieCard extends LitElement {
         })
         .then(() => {
           $card.innerHTML = this.createMovieCard(watched_movies, genres);
+          Loading.remove();
         })
         .finally(() => {
           this.card_content = $card.innerHTML;
@@ -248,6 +250,7 @@ class MovieCard extends LitElement {
     /* $card.innerHTML = this.createMovieCard(movies, genres); */
   }
   generateQueue(genres) {
+    Loading.standard("Loading...", { backgroundColor: "rgba(0,0,0,0.8)" });
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
@@ -261,6 +264,7 @@ class MovieCard extends LitElement {
         })
         .then(() => {
           $card.innerHTML = this.createMovieCard(watched_movies, genres);
+          Loading.remove();
         })
         .finally(() => {
           this.card_content = $card.innerHTML;

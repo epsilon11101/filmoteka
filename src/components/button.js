@@ -1,5 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { save, load } from "../scripts/local_save";
+import Notiflix from "notiflix";
 
 class C_Button extends LitElement {
   static get styles() {
@@ -34,6 +35,7 @@ class C_Button extends LitElement {
 
   static properties = {
     title: { type: String },
+    movie_name: { type: String },
   };
 
   constructor() {
@@ -49,14 +51,24 @@ class C_Button extends LitElement {
     const watched = [];
     const data = load(key);
     watched.push(...data);
-    if (!watched.includes(value)) watched.push(value);
+    if (!watched.includes(value)) {
+      Notiflix.Notify.success(`Added ${this.movie_name} to  WATCHED`);
+      watched.push(value);
+    } else {
+      Notiflix.Notify.info(`Movie ${this.movie_name} exits in  WATCHED`);
+    }
     save(key, watched);
   }
   _handleQueue(key, value) {
     const queue = [];
     const data = load(key);
     queue.push(...data);
-    if (!queue.includes(value)) queue.push(value);
+    if (!queue.includes(value)) {
+      Notiflix.Notify.success(`Added ${this.movie_name} to  QUEUE`);
+      queue.push(value);
+    } else {
+      Notiflix.Notify.info(`Movie ${this.movie_name} exits in  QUEUE`);
+    }
     save(key, queue);
   }
 }

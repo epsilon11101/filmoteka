@@ -131,6 +131,10 @@ class C_Modal extends LitElement {
           line-height: 23.44px;
           text-transform: uppercase;
         }
+        c-button.selected {
+          --btn-color: var(--orange_primary);
+          --btn-text_color: var(--white_primary);
+        }
         h6,
         p {
           color: var(--primary_dark);
@@ -208,7 +212,18 @@ class C_Modal extends LitElement {
     this.open = false;
   }
 
-  firstUpdated() {}
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener("keydown", (e) => {
+      if (e.key == "Escape") {
+        this._closeHandler();
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener("keydown");
+  }
 
   render() {
     return html`
@@ -217,8 +232,9 @@ class C_Modal extends LitElement {
           wrapper: true,
           open: this.open,
         })}"
+        
       >
-        <div class="modal_container ">
+        <div class="modal_container " >
           <span class="btn-close" @click="${this._closeHandler}">X</span>
           <div class="image-container">
             <img src=${this.movie_prop.img_url} />
@@ -269,11 +285,15 @@ class C_Modal extends LitElement {
     this.open = false;
   }
   _btnHandler(e) {
-    console.log(e.target.title);
+    const { title, id } = this.movie_prop;
     if (e.target.title.includes("WATCHED")) {
-      e.target._handleWatched("watched", this.movie_prop.id);
+      e.target.movie_name = title;
+      e.target._handleWatched("watched", id);
+      this._closeHandler();
     } else {
-      e.target._handleWatched("queue", this.movie_prop.id);
+      e.target.movie_name = title;
+      e.target._handleQueue("queue", id);
+      this._closeHandler();
     }
   }
 }
