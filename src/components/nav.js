@@ -102,8 +102,12 @@ class C_Nav extends LitElement {
           <ul class="nav-menu">
             <li>
               <div class="logo">
-                <img src=${images.icon} alt="movie_icon" />
-                <h1>Filmoteka</h1>
+                <img
+                  src=${images.icon}
+                  alt="movie_icon"
+                  @click="${this._homeHandler}"
+                />
+                <h1 @click="${this._homeHandler}">Filmoteka</h1>
               </div>
             </li>
             <li>
@@ -120,6 +124,10 @@ class C_Nav extends LitElement {
         </div>
       </nav>
     `;
+  }
+
+  _homeHandler(e) {
+    location.href = "index.html";
   }
 }
 

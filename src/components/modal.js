@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import { load } from "../scripts/local_save";
 import { classMap } from "lit/directives/class-map.js";
 import "./button";
 
@@ -91,6 +92,15 @@ class C_Modal extends LitElement {
           --btn-border_color: var(--black_primary);
           --btn-text_color: var(--black_primary);
         }
+
+        .watched_queue {
+          max-width: 100%;
+          max-height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+        }
         span {
           text-align: center;
           display: block;
@@ -131,11 +141,12 @@ class C_Modal extends LitElement {
           line-height: 23.44px;
           text-transform: uppercase;
         }
+
         h6,
         p {
           color: var(--primary_dark);
         }
-        p {
+        p:not(.watched) {
           line-height: 20px;
           overflow: scroll;
           height: 100px;
@@ -208,7 +219,18 @@ class C_Modal extends LitElement {
     this.open = false;
   }
 
-  firstUpdated() {}
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener("keydown", (e) => {
+      if (e.key == "Escape") {
+        this._closeHandler();
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener("keydown");
+  }
 
   render() {
     return html`
@@ -217,8 +239,9 @@ class C_Modal extends LitElement {
           wrapper: true,
           open: this.open,
         })}"
+        @click="${this._closeHandler}"
       >
-        <div class="modal_container ">
+        <div class="modal_container " >
           <span class="btn-close" @click="${this._closeHandler}">X</span>
           <div class="image-container">
             <img src=${this.movie_prop.img_url} />
@@ -259,21 +282,44 @@ class C_Modal extends LitElement {
                 this._btnHandler
               }"></c-button>
             </div>
+            <div class="watched_queue">
+              <p class="watched">${this._loadQueue()}</p>
+              <p class="watched">${this._loadWatched()}</p>
+            </div>
           </div>
         </div>
       </div>
     `;
   }
 
+  _loadWatched() {
+    const data = load("watched");
+    if (data.includes(this.movie_prop.id)) {
+      return "This movie was added to watched";
+    }
+    return "This movie was not added to watched";
+  }
+  _loadQueue() {
+    const data = load("queue");
+    if (data.includes(this.movie_prop.id)) {
+      return "This movie was added to your queue";
+    }
+    return "This movie was not added to your queue";
+  }
+
   _closeHandler() {
     this.open = false;
   }
   _btnHandler(e) {
-    console.log(e.target.title);
+    const { title, id } = this.movie_prop;
     if (e.target.title.includes("WATCHED")) {
-      e.target._handleWatched("watched", this.movie_prop.id);
+      e.target.movie_name = title;
+      e.target._handleWatched("watched", id);
+      this._closeHandler();
     } else {
-      e.target._handleWatched("queue", this.movie_prop.id);
+      e.target.movie_name = title;
+      e.target._handleQueue("queue", id);
+      this._closeHandler();
     }
   }
 }

@@ -5,7 +5,7 @@ import MovieApi from "../scripts/movie_api";
 import notFound from "../assets/notfound.jpg";
 import { load } from "../scripts/local_save";
 import Notiflix from "notiflix";
-
+import { Loading } from "notiflix/build/notiflix-loading-aio";
 class MovieCard extends LitElement {
   static get styles() {
     return [
@@ -90,6 +90,9 @@ class MovieCard extends LitElement {
     this.user = false;
     this.searching = true;
     this.API.page = 1;
+    Loading.init({
+      svgColor: "#FF6B08",
+    });
   }
 
   async firstUpdated() {
@@ -152,10 +155,12 @@ class MovieCard extends LitElement {
           </div>`;
       })
       .join("");
+
     return cards;
   }
 
   generateSearchMovies(genres) {
+    Loading.standard("Loading...", { backgroundColor: "rgba(0,0,0,0.8)" });
     this.API.query_params = "search/movie";
     const $card = this.shadowRoot.querySelector(".card");
     const page = this.shadowRoot.querySelector("c-page");
@@ -173,6 +178,7 @@ class MovieCard extends LitElement {
         page.total_pages = movies.total_pages;
         page.restoreValues();
         $card.innerHTML = this.createMovieCard(movies.results, genres);
+        Loading.remove();
       })
       .finally(() => {
         this.card_content = $card.innerHTML;
@@ -181,6 +187,7 @@ class MovieCard extends LitElement {
   }
 
   generateMovies(genres) {
+    Loading.standard("Loading...", { backgroundColor: "rgba(0,0,0,0.8)" });
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
     const page = this.shadowRoot.querySelector("c-page");
@@ -190,6 +197,7 @@ class MovieCard extends LitElement {
       .then((movies) => {
         page.total_pages = movies.total_pages;
         $card.innerHTML = this.createMovieCard(movies.results, genres);
+        Loading.remove();
       })
       .finally(() => {
         this.card_content = $card.innerHTML;
@@ -218,6 +226,7 @@ class MovieCard extends LitElement {
   }
 
   generateWatched(genres) {
+    Loading.standard("Loading...", { backgroundColor: "rgba(0,0,0,0.8)" });
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
@@ -231,6 +240,7 @@ class MovieCard extends LitElement {
         })
         .then(() => {
           $card.innerHTML = this.createMovieCard(watched_movies, genres);
+          Loading.remove();
         })
         .finally(() => {
           this.card_content = $card.innerHTML;
@@ -240,6 +250,7 @@ class MovieCard extends LitElement {
     /* $card.innerHTML = this.createMovieCard(movies, genres); */
   }
   generateQueue(genres) {
+    Loading.standard("Loading...", { backgroundColor: "rgba(0,0,0,0.8)" });
     this.API.query_params = "trending/movie/week";
     const $card = this.shadowRoot.querySelector(".card");
     $card.innerHTML = "";
@@ -253,6 +264,7 @@ class MovieCard extends LitElement {
         })
         .then(() => {
           $card.innerHTML = this.createMovieCard(watched_movies, genres);
+          Loading.remove();
         })
         .finally(() => {
           this.card_content = $card.innerHTML;

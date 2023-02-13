@@ -12,6 +12,10 @@ class C_Root_U extends LitElement {
           display: block;
           width: 100%;
         }
+        c-button.selected {
+          --btn-color: var(--orange_primary);
+          --btn-text_color: var(--white_primary);
+        }
       `,
     ];
   }
@@ -39,7 +43,7 @@ class C_Root_U extends LitElement {
     return html`
       <c-header url="../assets/desktop_user.png">
         <c-nav @click="${this._btnHandler}">
-          <c-button title="WATCHED" slot="button"></c-button>
+          <c-button title="WATCHED" slot="button" class="selected"></c-button>
           <c-button title="QUEUE" slot="button"></c-button>
         </c-nav>
       </c-header>
@@ -49,10 +53,15 @@ class C_Root_U extends LitElement {
 
   _btnHandler(e) {
     const $main = this.shadowRoot.querySelector("c-main");
+    const buttons = [...this.shadowRoot.querySelectorAll("c-button")];
     if (e.target.title.includes("WATCHED")) {
       $main.generateWatched();
+      buttons[0].classList.add("selected");
+      buttons[1].classList.remove("selected");
     } else {
       $main.generateQueue();
+      buttons[0].classList.remove("selected");
+      buttons[1].classList.add("selected");
     }
   }
 }
