@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import { load } from "../scripts/local_save";
 import { classMap } from "lit/directives/class-map.js";
 import "./button";
 
@@ -91,6 +92,15 @@ class C_Modal extends LitElement {
           --btn-border_color: var(--black_primary);
           --btn-text_color: var(--black_primary);
         }
+
+        .watched_queue {
+          max-width: 100%;
+          max-height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+        }
         span {
           text-align: center;
           display: block;
@@ -139,7 +149,7 @@ class C_Modal extends LitElement {
         p {
           color: var(--primary_dark);
         }
-        p {
+        p:not(.watched) {
           line-height: 20px;
           overflow: scroll;
           height: 100px;
@@ -275,10 +285,30 @@ class C_Modal extends LitElement {
                 this._btnHandler
               }"></c-button>
             </div>
+            <div class="watched_queue">
+              <p class="watched">${this._loadQueue()}</p>
+              <p class="watched">${this._loadWatched()}</p>
+            </div>
           </div>
         </div>
       </div>
     `;
+  }
+
+  _loadWatched() {
+    const data = load("watched");
+    if (data.includes(this.movie_prop.id)) {
+      return "This movie was added to watched";
+    }
+    return "This movie was not added to watched";
+  }
+  _loadQueue() {
+    const data = load("queue");
+    if (data.includes(this.movie_prop.id)) {
+      console.log("includes values");
+      return "This movie was added to your queue";
+    }
+    return "This movie was not added to your queue";
   }
 
   _closeHandler() {
