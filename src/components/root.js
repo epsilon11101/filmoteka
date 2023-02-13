@@ -5,6 +5,7 @@ import "../components/search";
 import "../components/main";
 import "../components/footer";
 import Notiflix from "notiflix";
+import { save } from "../scripts/local_save";
 class C_Root extends LitElement {
   static get styles() {
     return [
@@ -22,6 +23,8 @@ class C_Root extends LitElement {
 
   constructor() {
     super();
+    save("watched", []);
+    save("queue", []);
   }
 
   firstUpdated() {
