@@ -49,7 +49,7 @@ class C_Button extends LitElement {
 
   _handleWatched(key, value) {
     const watched = [];
-    const data = load(key);
+    const data = load("watched");
     watched.push(...data);
     if (!watched.includes(value)) {
       Notiflix.Notify.success(`Added ${this.movie_name} to  WATCHED`);
@@ -61,7 +61,7 @@ class C_Button extends LitElement {
   }
   _handleQueue(key, value) {
     const queue = [];
-    const data = load(key);
+    const data = load("queue");
     queue.push(...data);
     if (!queue.includes(value)) {
       Notiflix.Notify.success(`Added ${this.movie_name} to  QUEUE`);
