@@ -141,10 +141,7 @@ class C_Modal extends LitElement {
           line-height: 23.44px;
           text-transform: uppercase;
         }
-        c-button.selected {
-          --btn-color: var(--orange_primary);
-          --btn-text_color: var(--white_primary);
-        }
+
         h6,
         p {
           color: var(--primary_dark);
@@ -305,7 +302,6 @@ class C_Modal extends LitElement {
   _loadQueue() {
     const data = load("queue");
     if (data.includes(this.movie_prop.id)) {
-      console.log("includes values");
       return "This movie was added to your queue";
     }
     return "This movie was not added to your queue";
