@@ -97,14 +97,6 @@ class C_Modal extends LitElement {
           --btn-text_color: var(--white_primary);
         }
 
-        .watched_queue {
-          max-width: 100%;
-          max-height: 300px;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: flex-start;
-        }
         span {
           text-align: center;
           display: block;
@@ -223,9 +215,8 @@ class C_Modal extends LitElement {
     };
   }
   firstUpdated() {
-    if (this.open) {
-      this._loadWatched();
-    }
+    this._loadWatched();
+    this._loadQueue();
   }
 
   connectedCallback() {
@@ -291,10 +282,7 @@ class C_Modal extends LitElement {
                 this._btnHandler
               }" id="queue"></c-button>
             </div>
-            <div class="watched_queue">
-              <p class="watched">${this._loadQueue()}</p>
-              <!-- <p class="watched">${this._loadWatched()}</p> -->
-            </div>
+
           </div>
         </div>
       </div>
