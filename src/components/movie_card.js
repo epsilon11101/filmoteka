@@ -242,7 +242,6 @@ class MovieCard extends LitElement {
       this.API.query_params = `movie/${movie_id}`;
       this.API.getAllData()
         .then((movie) => {
-          console.log("entre");
           watched_movies.push(movie);
           Loading.remove();
         })

@@ -92,6 +92,10 @@ class C_Modal extends LitElement {
           --btn-border_color: var(--black_primary);
           --btn-text_color: var(--black_primary);
         }
+        c-button.selected {
+          --btn-color: var(--orange_primary);
+          --btn-text_color: var(--white_primary);
+        }
 
         .watched_queue {
           max-width: 100%;
@@ -206,6 +210,7 @@ class C_Modal extends LitElement {
 
   constructor() {
     super();
+    this.open = false;
     this.movie_prop = {
       img_url: "",
       vote: "",
@@ -216,7 +221,11 @@ class C_Modal extends LitElement {
       about: "",
       id: "",
     };
-    this.open = false;
+  }
+  firstUpdated() {
+    if (this.open) {
+      this._loadWatched();
+    }
   }
 
   connectedCallback() {
@@ -277,14 +286,14 @@ class C_Modal extends LitElement {
             <div class="modal_footer" ">
               <c-button title="ADD TO WATCHED" @click="${
                 this._btnHandler
-              }"></c-button>
+              }" id="watched" ></c-button>
               <c-button title="ADD TO QUEUE" @click="${
                 this._btnHandler
-              }"></c-button>
+              }" id="queue"></c-button>
             </div>
             <div class="watched_queue">
               <p class="watched">${this._loadQueue()}</p>
-              <p class="watched">${this._loadWatched()}</p>
+              <!-- <p class="watched">${this._loadWatched()}</p> -->
             </div>
           </div>
         </div>
@@ -293,18 +302,28 @@ class C_Modal extends LitElement {
   }
 
   _loadWatched() {
-    const data = load("watched");
-    if (data.includes(this.movie_prop.id)) {
-      return "This movie was added to watched";
+    if (this.open) {
+      const data = load("watched");
+      const btn = this.shadowRoot.querySelector("#watched");
+      if (data.includes(this.movie_prop.id)) {
+        btn.classList.add("selected");
+        return "This movie was added to watched";
+      }
+      btn.classList.remove("selected");
+      return "This movie was not added to watched";
     }
-    return "This movie was not added to watched";
   }
   _loadQueue() {
-    const data = load("queue");
-    if (data.includes(this.movie_prop.id)) {
-      return "This movie was added to your queue";
+    if (this.open) {
+      const data = load("queue");
+      const btn = this.shadowRoot.querySelector("#queue");
+      if (data.includes(this.movie_prop.id)) {
+        btn.classList.add("selected");
+        return "This movie was added to your queue";
+      }
+      btn.classList.remove("selected");
+      return "This movie was not added to your queue";
     }
-    return "This movie was not added to your queue";
   }
 
   _closeHandler() {

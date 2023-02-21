@@ -17,6 +17,7 @@ class C_Button extends LitElement {
           color: var(--btn-text_color, var(--white_primary));
           border: solid 1px var(--btn-border_color, var(--white_primary));
         }
+
         button:hover {
           color: var(--h_btn-text_color, var(--white_primary));
           background-color: var(--h_btn-color, var(--orange_primary));
@@ -47,6 +48,11 @@ class C_Button extends LitElement {
     return html` <button>${this.title}</button> `;
   }
 
+  _chageColor() {}
+  _restoreColor() {
+    this.style.backgroundColor = "var(--white_primary)";
+    this.style.color = "var(--white_primary)";
+  }
   _handleWatched(key, value) {
     const watched = [];
     const data = load("watched");
