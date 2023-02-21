@@ -232,15 +232,22 @@ class MovieCard extends LitElement {
     $card.innerHTML = "";
     const watched = load("watched");
     const watched_movies = [];
+
+    if (watched.length <= 0) {
+      Loading.remove();
+      return;
+    }
+
     watched.map((movie_id) => {
       this.API.query_params = `movie/${movie_id}`;
       this.API.getAllData()
         .then((movie) => {
+          console.log("entre");
           watched_movies.push(movie);
+          Loading.remove();
         })
         .then(() => {
           $card.innerHTML = this.createMovieCard(watched_movies, genres);
-          Loading.remove();
         })
         .finally(() => {
           this.card_content = $card.innerHTML;
@@ -256,6 +263,10 @@ class MovieCard extends LitElement {
     $card.innerHTML = "";
     const watched = load("queue");
     const watched_movies = [];
+    if (watched.length <= 0) {
+      Loading.remove();
+      return;
+    }
     watched.map((movie_id) => {
       this.API.query_params = `movie/${movie_id}`;
       this.API.getAllData()
