@@ -16,6 +16,18 @@ const load = (key) => {
   }
 };
 
-export { save, load };
+const remove = async (key, id) => {
+  try {
+    const data = load(key);
+    const element = data.indexOf(id);
+    if (element > -1) {
+      await data.splice(element, 1);
+      const updatedValues = await [...data];
+      await save(key, updatedValues);
+    }
+  } catch (error) {
+    console.log("Delete state error:", error.message);
+  }
+};
 
-
+export { save, load, remove };
