@@ -214,10 +214,7 @@ class C_Modal extends LitElement {
       id: "",
     };
   }
-  firstUpdated() {
-    this._loadWatched();
-    this._loadQueue();
-  }
+  firstUpdated() {}
 
   connectedCallback() {
     super.connectedCallback();
@@ -289,42 +286,46 @@ class C_Modal extends LitElement {
     `;
   }
 
-  _loadWatched() {
+  async _loadWatched() {
     if (this.open) {
-      const data = load("watched");
+      const data = await load("watched");
       const btn = this.shadowRoot.querySelector("#watched");
-      if (data.includes(this.movie_prop.id)) {
+
+      if (await data.includes(this.movie_prop.id)) {
         btn.classList.add("selected");
-        return "This movie was added to watched";
+        return;
       }
       btn.classList.remove("selected");
-      return "This movie was not added to watched";
     }
   }
-  _loadQueue() {
+  async _loadQueue() {
     if (this.open) {
-      const data = load("queue");
+      const data = await load("queue");
       const btn = this.shadowRoot.querySelector("#queue");
-      if (data.includes(this.movie_prop.id)) {
+
+      if (await data.includes(this.movie_prop.id)) {
         btn.classList.add("selected");
-        return "This movie was added to your queue";
+        return;
       }
       btn.classList.remove("selected");
-      return "This movie was not added to your queue";
     }
   }
 
   _closeHandler() {
     this.open = false;
   }
+
   _btnHandler(e) {
     const { title, id } = this.movie_prop;
     if (e.target.title.includes("WATCHED")) {
       e.target.movie_name = title;
+      e.target.id = id;
+      e.target.classList.toggle("selected");
       e.target._handleWatched("watched", id);
       this._closeHandler();
     } else {
       e.target.movie_name = title;
+      e.target.id = id;
       e.target._handleQueue("queue", id);
       this._closeHandler();
     }
