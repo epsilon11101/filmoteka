@@ -74,11 +74,7 @@ export default class MovieApi {
 
   async getAllData() {
     try {
-     
       const response = await axios(this.#options);
-      response.onload = function (){
-        console.log("fin")
-      }
       const data = await response.data;
       return data;
     } catch (error) {

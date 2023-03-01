@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit";
-import { save, load } from "../scripts/local_save";
+import { save, load, remove } from "../scripts/local_save";
 import Notiflix from "notiflix";
 
 class C_Button extends LitElement {
@@ -17,11 +17,13 @@ class C_Button extends LitElement {
           color: var(--btn-text_color, var(--white_primary));
           border: solid 1px var(--btn-border_color, var(--white_primary));
         }
+
         button:hover {
           color: var(--h_btn-text_color, var(--white_primary));
           background-color: var(--h_btn-color, var(--orange_primary));
           cursor: pointer;
         }
+
         @media screen and (min-width: 767px) {
           button {
             --btn-width: 136px;
@@ -36,6 +38,7 @@ class C_Button extends LitElement {
   static properties = {
     title: { type: String },
     movie_name: { type: String },
+    id: { type: Number },
   };
 
   constructor() {
@@ -47,17 +50,29 @@ class C_Button extends LitElement {
     return html` <button>${this.title}</button> `;
   }
 
+  _updatePage() {
+    if (!window.location.href.includes("index")) {
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+  }
+
   _handleWatched(key, value) {
     const watched = [];
     const data = load("watched");
     watched.push(...data);
+    Notiflix.Notify.success(`Added ${this.movie_name} to  WATCHED`);
     if (!watched.includes(value)) {
-      Notiflix.Notify.success(`Added ${this.movie_name} to  WATCHED`);
       watched.push(value);
+      save(key, watched);
     } else {
-      Notiflix.Notify.info(`Movie ${this.movie_name} exits in  WATCHED`);
+      Notiflix.Notify.warning(
+        `Movie ${this.movie_name} was remove from  WATCHED`
+      );
+      remove("watched", this.id);
+      this._updatePage();
     }
-    save(key, watched);
   }
   _handleQueue(key, value) {
     const queue = [];
@@ -66,10 +81,14 @@ class C_Button extends LitElement {
     if (!queue.includes(value)) {
       Notiflix.Notify.success(`Added ${this.movie_name} to  QUEUE`);
       queue.push(value);
+      save(key, queue);
     } else {
-      Notiflix.Notify.info(`Movie ${this.movie_name} exits in  QUEUE`);
+      Notiflix.Notify.warning(
+        `Movie ${this.movie_name} was remove from  QUEUE`
+      );
+      remove("queue", this.id);
+      this._updatePage();
     }
-    save(key, queue);
   }
 }
 

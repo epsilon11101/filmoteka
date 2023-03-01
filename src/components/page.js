@@ -91,7 +91,6 @@ class C_Page extends LitElement {
   firstUpdated() {
     this.hidden = document.URL.includes("user") ? true : false;
     this.style.display = this.hidden ? "none" : "block";
-    console.table({ page: this.page, current_page: this.current_page });
   }
 
   updated() {
