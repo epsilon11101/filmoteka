@@ -307,6 +307,8 @@ class MovieCard extends LitElement {
 
         const $modal = this.shadowRoot.querySelector("c-modal");
         $modal.open = true;
+        $modal._loadWatched();
+        $modal._loadQueue();
         $modal.movie_prop = movie_prop;
       });
     }
